@@ -1,0 +1,184 @@
+/* 縦書き EPUB 用スタイル（字ずれ・字崩れ・括弧数字対策・上揃え版） */
+@namespace epub "http://www.idpf.org/2007/ops";
+
+@page {
+  margin: 1.2em 1.6em;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  writing-mode: vertical-rl;
+  -webkit-writing-mode: vertical-rl;
+  -epub-writing-mode: vertical-rl;
+  direction: rtl;
+  /* mixed だと半角数字・括弧が90度回転し字かぶりするため upright */
+  text-orientation: upright;
+  -webkit-text-orientation: upright;
+  /* 縦書きでは left=上揃え、right=下揃え */
+  text-align: left;
+  -webkit-text-align: left;
+  -epub-text-align-last: left;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  height: auto;
+  min-height: 0;
+}
+
+body {
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  font-size: 1em;
+  line-height: 2;
+  margin: 0;
+  margin-block-start: 0;
+  padding: 1.2em 1.6em;
+  word-break: normal;
+  line-break: strict;
+  overflow-wrap: normal;
+  font-feature-settings: "palt" 1;
+  font-variant-east-asian: proportional-width;
+  display: block;
+  height: auto;
+  min-height: 0;
+}
+
+section {
+  text-align: left;
+  -webkit-text-align: left;
+  -epub-text-align-last: left;
+  margin-block-start: 0;
+  text-orientation: upright;
+  -webkit-text-orientation: upright;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  font-weight: bold;
+  line-height: 1.8;
+  margin-block: 1.2em;
+  margin-inline: 0.6em;
+  text-orientation: upright;
+  -webkit-text-orientation: upright;
+  text-align: left;
+  -webkit-text-align: left;
+  -epub-text-align-last: left;
+}
+
+h1 { font-size: 1.5em; }
+h2 { font-size: 1.3em; }
+h3 { font-size: 1.15em; }
+
+p {
+  margin-block: 0.6em;
+  margin-inline: 0;
+  text-indent: 1em;
+  text-align: left;
+  -webkit-text-align: left;
+  -epub-text-align-last: left;
+  text-orientation: upright;
+  -webkit-text-orientation: upright;
+}
+
+strong, em, b, i, span, a {
+  text-orientation: upright;
+  -webkit-text-orientation: upright;
+}
+
+/* 縦中横: 2桁以上の数字列のみ（見出し h* には適用しない） */
+p .tcy, li .tcy, blockquote .tcy, td .tcy {
+  -webkit-text-combine: horizontal;
+  text-combine-upright: all;
+  -ms-text-combine-horizontal: all;
+  text-orientation: mixed;
+  -webkit-text-orientation: mixed;
+  display: inline-block;
+  letter-spacing: 0;
+}
+
+blockquote {
+  margin-block: 1em;
+  margin-inline: 0.8em;
+  padding: 0.5em;
+  color: #333;
+  text-align: left;
+  -webkit-text-align: left;
+  -epub-text-align-last: left;
+  text-orientation: upright;
+  -webkit-text-orientation: upright;
+}
+
+/* 表・リストは横組みのまま（付録C 可読性確保） */
+table, thead, tbody, tr, th, td {
+  writing-mode: horizontal-tb;
+  -webkit-writing-mode: horizontal-tb;
+  -epub-writing-mode: horizontal-tb;
+  direction: ltr;
+  text-orientation: mixed;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 1em auto;
+  font-size: 0.75em;
+  width: auto;
+  max-width: 100%;
+  table-layout: fixed;
+  display: table;
+}
+
+th, td {
+  border: 1px solid #999;
+  padding: 0.35em 0.45em;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  vertical-align: top;
+}
+
+ul, ol {
+  margin: 0.6em 0;
+  padding-inline-start: 1.5em;
+  text-align: left;
+  -webkit-text-align: left;
+  text-orientation: upright;
+  -webkit-text-orientation: upright;
+}
+
+li {
+  margin: 0.3em 0;
+  text-orientation: upright;
+  -webkit-text-orientation: upright;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 2em 0;
+}
+
+/* 目次 */
+ul {
+  list-style: none;
+  padding-inline-start: 0;
+  margin: 0.5em 0 1.5em;
+}
+
+ul ul {
+  padding-inline-start: 1.5em;
+  margin: 0.25em 0;
+}
+
+li {
+  margin: 0.35em 0;
+  line-height: 1.8;
+}
+
+/* 欧文コードは横組み */
+code, pre {
+  text-orientation: mixed;
+  writing-mode: horizontal-tb;
+}

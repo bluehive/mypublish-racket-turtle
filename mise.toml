@@ -1,0 +1,370 @@
+# mypublish-racket-turtle — mise tools & tasks
+# 元: htdp-ja-translation/mise.toml の wt:* を「任意リポジトリ root」で使えるよう改変
+#
+# 共通前提
+# • リポジトリルートに mise.toml を配置（未コミットでも wt:*setup が worktree へコピー）。
+# • wt:setup / wt:clean … 固定パス ${HOME}/my-worktree（1 本だけ）
+# • wt:setup-append-branch … 既存 experimental 先端から別 path に枝を足す（複数可）
+# • wt:setup / wt:clean / wt:setup-append-branch はメインリポジトリ側で実行するのが安全。
+# • wt:grok は cwd が git worktree ならそこ優先、無ければ ${HOME}/my-worktree にフォールバック。
+# • 既定ブランチは main（無ければ master）。
+# • 実験 worktree ブランチの作成はユーザーが実行する（Issue #27）。
+
+[tools]
+node = "22"
+# mise watch / watch:test 用（ローカル CI 自動再実行）
+watchexec = "2"
+
+[tasks."zenn:preview"]
+description = "Zenn CLI プレビュー (localhost:8000)"
+run = "npx zenn preview"
+
+[tasks."zenn:preview-port"]
+description = "Zenn プレビュー（ポート指定: PORT=3000 mise run zenn:preview-port）"
+run = "npx zenn preview --port ${PORT:-3000}"
+
+[tasks."test:racket"]
+description = "code/ 配下の BSL (htdp/bsl) を racket で実行（check-expect + test）"
+# mise watch test:racket がこの sources を監視する
+sources = ["code/**/*.rkt", "code/*.rkt"]
+outputs = []
+shell = "bash -c"
+run = '''
+set -euo pipefail
+if ! command -v racket >/dev/null 2>&1; then
+  echo "racket not found. Install Racket first."
+  exit 1
+fi
+shopt -s nullglob
+found=0
+for f in code/*.rkt; do
+  [ -f "$f" ] || continue
+  found=1
+  echo "=== racket $f ==="
+  racket "$f"
+done
+if [ "$found" -eq 0 ]; then
+  echo "no .rkt files under code/"
+fi
+'''
+
+[tasks."ci:test"]
+description = "ローカル CI ゲート: BSL テスト一発（マージ前・push 前に推奨）"
+depends = ["test:racket"]
+
+[tasks."watch:test"]
+description = "code/ 変更で test:racket を自動再実行（mise watch + watchexec）"
+# 常駐タスク。Ctrl+C で停止。sources は test:racket 側を参照する
+run = "mise watch test:racket --clear --on-busy-update=queue"
+
+[tasks."book:combine"]
+description = "books/ 章を manuscript/.../book.md に結合"
+run = "python3 scripts/racket-turtle-fractals/combine_drafts.py"
+
+[tasks."book:epub"]
+description = "横書き EPUB 生成 + verify（要 pandoc）"
+shell = "bash -c"
+run = '''
+set -euo pipefail
+python3 scripts/racket-turtle-fractals/combine_drafts.py
+python3 scripts/racket-turtle-fractals/build.py --format epub-horizontal --no-cover --verify
+'''
+
+[tasks."book:epub-vertical"]
+description = "縦書き EPUB 生成 + verify"
+shell = "bash -c"
+run = '''
+set -euo pipefail
+python3 scripts/racket-turtle-fractals/combine_drafts.py
+python3 scripts/racket-turtle-fractals/build.py --format epub-vertical --no-cover --verify
+'''
+
+[tasks."wt:setup"]
+description = "実験用 Git worktree を作成（固定パス ${HOME}/my-worktree）"
+shell = "bash -c"
+run = '''
+set -euo pipefail
+WORKTREE_DIR="${HOME}/my-worktree"
+MAIN_ROOT="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+MISE_SRC="$MAIN_ROOT/mise.toml"
+
+# 既定ベースブランチ: main があれば main、なければ master
+default_base="main"
+if git -C "$MAIN_ROOT" show-ref --verify --quiet "refs/heads/main"; then
+  default_base="main"
+elif git -C "$MAIN_ROOT" show-ref --verify --quiet "refs/heads/master"; then
+  default_base="master"
+fi
+
+git -C "$MAIN_ROOT" worktree prune
+
+if [ -e "$WORKTREE_DIR" ]; then
+  echo "❌ 既に存在します: $WORKTREE_DIR"
+  echo "   先に（メインリポジトリで） mise run wt:clean を実行してください。"
+  exit 1
+fi
+
+default_branch="experimental/$(date +%Y%m%d)-feat"
+read -r -p "branch 名 (default: $default_branch): " branch
+branch=${branch:-"$default_branch"}
+
+mkdir -p "$(dirname "$WORKTREE_DIR")"
+
+if git -C "$MAIN_ROOT" show-ref --verify --quiet "refs/heads/$branch"; then
+  echo "ℹ️  既存ブランチを利用: $branch"
+  git -C "$MAIN_ROOT" worktree add "$WORKTREE_DIR" "$branch"
+else
+  echo "ℹ️  新規ブランチを作成: $branch (from $default_base)"
+  git -C "$MAIN_ROOT" worktree add -b "$branch" "$WORKTREE_DIR" "$default_base"
+fi
+
+# mise.toml がブランチに無い場合でも worktree からタスクを使えるようにする
+if [ -f "$MISE_SRC" ]; then
+  cp -f "$MISE_SRC" "$WORKTREE_DIR/mise.toml"
+  echo "ℹ️  mise.toml を worktree にコピーしました"
+  (cd "$WORKTREE_DIR" && mise trust mise.toml >/dev/null 2>&1 || true)
+fi
+
+echo "✅ worktree 準備完了: $WORKTREE_DIR [$branch]"
+echo "   リポジトリ: $MAIN_ROOT"
+echo "   次のどちらか:"
+echo "     • メインのまま:  mise run wt:grok"
+echo "     • worktree へ:  cd $WORKTREE_DIR && mise run wt:grok"
+'''
+
+[tasks."wt:setup-append-branch"]
+description = "既存 experimental 先端から新 branch + 別 path worktree を追加"
+shell = "bash -c"
+run = '''
+set -euo pipefail
+
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  MAIN_ROOT="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+else
+  echo "❌ git リポジトリ内で実行してください（推奨: リポジトリ root）"
+  exit 1
+fi
+
+cd "$MAIN_ROOT"
+MISE_SRC="$MAIN_ROOT/mise.toml"
+FIXED_WT="${HOME}/my-worktree"
+
+git -C "$MAIN_ROOT" worktree prune
+
+echo "=== wt:setup-append-branch ==="
+echo "メイン: $MAIN_ROOT"
+echo "既存 worktree:"
+git -C "$MAIN_ROOT" worktree list
+echo
+
+default_base=""
+if [ -d "$FIXED_WT" ] && git -C "$FIXED_WT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  default_base="$(git -C "$FIXED_WT" rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+fi
+if [ -z "$default_base" ] || [ "$default_base" = "master" ] || [ "$default_base" = "main" ]; then
+  default_base="$(
+    git -C "$MAIN_ROOT" for-each-ref --sort=-committerdate --format='%(refname:short)' 'refs/heads/experimental/*' \
+      | head -n1
+  )"
+fi
+if [ -z "$default_base" ]; then
+  if git -C "$MAIN_ROOT" show-ref --verify --quiet "refs/heads/main"; then
+    default_base="main"
+  elif git -C "$MAIN_ROOT" show-ref --verify --quiet "refs/heads/master"; then
+    default_base="master"
+  else
+    default_base="main"
+  fi
+fi
+
+echo "ローカル experimental/* ブランチ:"
+git -C "$MAIN_ROOT" branch --list 'experimental/*' || true
+echo
+read -r -p "base branch（分岐元） (default: $default_base): " base
+base=${base:-"$default_base"}
+
+if ! git -C "$MAIN_ROOT" show-ref --verify --quiet "refs/heads/$base"; then
+  echo "❌ base branch がありません: $base"
+  echo "   先にそのブランチを用意するか、正しい名前を指定してください。"
+  exit 1
+fi
+
+default_suffix="feat"
+default_branch="experimental/$(date +%Y%m%d)-${default_suffix}"
+read -r -p "新しい branch 名 (default: $default_branch): " branch
+branch=${branch:-"$default_branch"}
+
+if git -C "$MAIN_ROOT" show-ref --verify --quiet "refs/heads/$branch"; then
+  echo "❌ すでに同名 branch があります: $branch"
+  echo "   別名にするか、不要なら branch -D してから再実行してください。"
+  exit 1
+fi
+
+slug="${branch#experimental/}"
+slug="${slug//\//-}"
+default_dir="${HOME}/my-worktree-${slug}"
+read -r -p "worktree パス (default: $default_dir): " WORKTREE_DIR
+WORKTREE_DIR=${WORKTREE_DIR:-"$default_dir"}
+case "$WORKTREE_DIR" in
+  "~/"*) WORKTREE_DIR="${HOME}/${WORKTREE_DIR#~/}" ;;
+  "~") WORKTREE_DIR="${HOME}" ;;
+esac
+
+if [ "$WORKTREE_DIR" = "$FIXED_WT" ]; then
+  echo "❌ 固定 path ($FIXED_WT) は wt:setup 専用です。"
+  echo "   別名 path を指定してください（例: $default_dir）。"
+  exit 1
+fi
+
+if [ -e "$WORKTREE_DIR" ]; then
+  echo "❌ 既に存在します: $WORKTREE_DIR"
+  exit 1
+fi
+
+echo
+echo "作成内容:"
+echo "  base:     $base ($(git -C "$MAIN_ROOT" rev-parse --short "$base"))"
+echo "  branch:   $branch  (新規 -b)"
+echo "  path:     $WORKTREE_DIR"
+read -r -p "実行しますか？ (y/N): " confirm
+if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+  echo "キャンセルしました"
+  exit 0
+fi
+
+mkdir -p "$(dirname "$WORKTREE_DIR")"
+echo "ℹ️  git worktree add -b \"$branch\" \"$WORKTREE_DIR\" \"$base\""
+git -C "$MAIN_ROOT" worktree add -b "$branch" "$WORKTREE_DIR" "$base"
+
+if [ -f "$MISE_SRC" ]; then
+  cp -f "$MISE_SRC" "$WORKTREE_DIR/mise.toml"
+  echo "ℹ️  mise.toml を worktree にコピーしました"
+  (cd "$WORKTREE_DIR" && mise trust mise.toml >/dev/null 2>&1 || true)
+fi
+
+echo
+echo "✅ append worktree 準備完了"
+echo "   path:   $WORKTREE_DIR"
+echo "   branch: $branch  (from $base)"
+echo "   作業開始:  cd $WORKTREE_DIR"
+echo "   一覧:      git -C $MAIN_ROOT worktree list"
+echo "   削除例:    git -C $MAIN_ROOT worktree remove $WORKTREE_DIR"
+echo "              git -C $MAIN_ROOT branch -d $branch   # 任意"
+'''
+
+[tasks."wt:grok"]
+description = "Grok Build 起動（cwd の worktree 優先、无ければ ${HOME}/my-worktree）"
+shell = "bash -c"
+run = '''
+set -euo pipefail
+FIXED_WT="${HOME}/my-worktree"
+RESOLVE_SRC=""
+
+# --- A. cwd 優先: いまのディレクトリが git worktree ならその toplevel ---
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  WORKTREE_DIR="$(git rev-parse --path-format=absolute --show-toplevel)"
+  RESOLVE_SRC="cwd"
+# --- B. フォールバック: 固定 path ---
+elif [ -d "$FIXED_WT" ] && git -C "$FIXED_WT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  WORKTREE_DIR="$(git -C "$FIXED_WT" rev-parse --path-format=absolute --show-toplevel)"
+  RESOLVE_SRC="fixed"
+else
+  echo "❌ 対象 worktree が見つかりません。"
+  echo "   • git worktree 内で mise run wt:grok する（推奨: append path 含む）"
+  echo "   • または mise run wt:setup で固定 path を用意: $FIXED_WT"
+  exit 1
+fi
+
+MAIN_ROOT="$(dirname "$(git -C "$WORKTREE_DIR" rev-parse --path-format=absolute --git-common-dir)")"
+BRANCH="$(git -C "$WORKTREE_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "?")"
+
+# メイン側に新しい mise.toml があれば worktree へ同期（未追跡でもタスクが揃う）
+if [ -f "$MAIN_ROOT/mise.toml" ] && [ "$WORKTREE_DIR" != "$MAIN_ROOT" ]; then
+  cp -f "$MAIN_ROOT/mise.toml" "$WORKTREE_DIR/mise.toml"
+fi
+
+echo "=== Grok Build (git-worktree-experimental) ==="
+echo "resolve: $RESOLVE_SRC  (cwd 優先 / fixed=${FIXED_WT})"
+echo "repo:    $MAIN_ROOT"
+echo "worktree:$WORKTREE_DIR"
+echo "branch:  $BRANCH"
+git -C "$WORKTREE_DIR" status
+echo "メインリポジトリは安全です。この worktree で実験しますか？ (y/N)"
+read -r confirm
+if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+  echo "キャンセルしました（y で続行）"
+  exit 0
+fi
+
+PROMPT='あなたは git-worktree-experimental スキルを使用中です。
+この worktree（'"$WORKTREE_DIR"' / branch '"$BRANCH"'）上で実験的な変更を行ってください。
+メインリポジトリ（'"$MAIN_ROOT"'）を直接壊さないこと。作業後は git status で差分を確認すること。
+対象: mypublish-racket-turtle（Racket Turtle Fractals 執筆）。'
+
+exec grok --cwd "$WORKTREE_DIR" "$PROMPT"
+'''
+
+[tasks."wt:clean"]
+description = "実験終了後、固定 worktree (${HOME}/my-worktree) を削除"
+shell = "bash -c"
+run = '''
+set -euo pipefail
+WORKTREE_DIR="${HOME}/my-worktree"
+
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  MAIN_ROOT="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+else
+  echo "❌ git リポジトリ内で実行してください（メイン推奨）"
+  exit 1
+fi
+
+cwd="$(pwd -P)"
+if [[ "$cwd" == "$WORKTREE_DIR" || "$cwd" == "$WORKTREE_DIR"/* ]]; then
+  cd "$MAIN_ROOT"
+fi
+
+branch=""
+
+if git -C "$MAIN_ROOT" worktree list --porcelain | grep -Fxq "worktree $WORKTREE_DIR"; then
+  branch="$(git -C "$WORKTREE_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+  git -C "$MAIN_ROOT" worktree remove "$WORKTREE_DIR" --force
+  echo "✅ worktree を削除しました: $WORKTREE_DIR"
+elif [ -e "$WORKTREE_DIR" ]; then
+  rm -rf "$WORKTREE_DIR"
+  echo "✅ 残骸ディレクトリを削除しました: $WORKTREE_DIR"
+else
+  echo "ℹ️  worktree は既にありません: $WORKTREE_DIR"
+fi
+
+git -C "$MAIN_ROOT" worktree prune
+
+if [ -z "$branch" ]; then
+  echo "ローカルブランチ:"
+  git -C "$MAIN_ROOT" branch --list 'experimental/*'
+  read -r -p "削除する branch 名 (空 Enter でスキップ): " branch
+fi
+
+if [ -n "$branch" ] && [ "$branch" != "master" ] && [ "$branch" != "main" ]; then
+  if git -C "$MAIN_ROOT" show-ref --verify --quiet "refs/heads/$branch"; then
+    read -r -p "ブランチ '$branch' も削除しますか？ (y/N): " del
+    if [[ "$del" == "y" || "$del" == "Y" ]]; then
+      git -C "$MAIN_ROOT" branch -D "$branch"
+      echo "✅ ブランチ削除: $branch"
+    fi
+  fi
+fi
+
+echo "✅ clean 完了"
+git -C "$MAIN_ROOT" worktree list
+'''
+
+# 使い方:
+# cd ~/my-project/mypublish-racket-turtle
+# mise trust && mise install && npm install
+# mise run zenn:preview
+# mise run test:racket
+# mise run book:combine && mise run book:epub
+# mise run wt:setup                  # 固定 path ${HOME}/my-worktree（from main）
+# mise run wt:setup-append-branch    # 別 path + 新 branch
+# mise run wt:grok
+# mise run wt:clean

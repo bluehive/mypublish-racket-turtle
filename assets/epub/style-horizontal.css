@@ -1,0 +1,104 @@
+/* 横書き EPUB 用スタイル（ビューア余白・右端切れ対策） */
+@namespace epub "http://www.idpf.org/2007/ops";
+
+/* 多くの EPUB ビューアは body padding を無視するため @page で余白を確保 */
+@page {
+  margin: 1.2em 1.6em;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif;
+  line-height: 1.8;
+  font-size: 1em;
+  margin: 0;
+  /* @page 非対応ビューア向けの二重保険 */
+  padding: 1.2em 1.6em;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+section {
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif;
+  line-height: 1.5;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  overflow-wrap: break-word;
+}
+
+h1 { font-size: 1.6em; }
+h2 { font-size: 1.35em; }
+h3 { font-size: 1.15em; }
+
+p {
+  text-indent: 1em;
+  margin: 0.5em 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+blockquote {
+  margin: 1em 0;
+  padding: 0.5em 1em;
+  border-left: 3px solid #888;
+  color: #333;
+  overflow-wrap: break-word;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 1em 0;
+  font-size: 0.85em;
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+}
+
+th, td {
+  border: 1px solid #999;
+  padding: 0.4em 0.5em;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  vertical-align: top;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 2em 0;
+}
+
+/* 目次 */
+h1:has(+ ul), section[epub|type~="toc"] {
+  margin-bottom: 1em;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5em 0 1.5em;
+}
+
+ul ul {
+  padding-left: 1.5em;
+  margin: 0.25em 0;
+}
+
+li {
+  margin: 0.35em 0;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}

@@ -1,0 +1,20 @@
+title: "自己相似形グラフィック入門"
+summary: "Racket のタートルグラフィックスで自己相似（フラクタル）を描きながら、再帰と関数型の考え方を学ぶ入門書。EPUB 生成前に Zenn で章単位公開する。"
+topics: ["Racket", "Turtle", "Fractal", "再帰", "プログラミング入門"]
+published: false
+price: 0
+# 初回公開: 序章・第1章から chapters に載せる（draft-publish-books-2026#15）
+chapters:
+  - intro
+  - ch01-basics
+  - ch02-turtle
+  - ch03-recursion
+  - ch04-fractals
+  - closing
+  - appendix-a-source-code
+  - appendix-b-environment
+  - appendix-c-exercises
+  - appendix-d-references
+  - appendix-e-lang-policy
+
+toc_depth: 2
