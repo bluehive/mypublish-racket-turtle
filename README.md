@@ -47,28 +47,34 @@
 ### 第2章　タートルグラフィックス入門（レッスン1–2日目）
 
 - 原稿: [ch02-turtle.md](books/racket-turtle-fractals/ch02-turtle.md)
+- コード: [ch02-turtle.rkt](code/ch02-turtle.rkt)（`#lang racket` + racket-turtle）
+- 状態: ドラフト（howtocode データ駆動・CommandList / #1）
+- 2.0 データ駆動の約束
 - 2.1 `racket-turtle` の考え方
 - 2.2 正方形・三角形・多角形
 - 2.3 色・ペン・スタンプ
 - 2.4 関数で図形を再利用
-- 各節末メモ: 三角ロジックで整理予定
 
 ### 第3章　再帰への橋渡し（レッスン3日目）
 
 - 原稿: [ch03-recursion.md](books/racket-turtle-fractals/ch03-recursion.md)
+- コード: [ch03-recursion.rkt](code/ch03-recursion.rkt)
+- 状態: ドラフト（テンプレート駆動・#2）
+- 3.0 なぜ再帰か
 - 3.1 繰り返す図形から再帰へ
-- 3.2 再帰の型紙（構造的再帰の直感）
+- 3.2 再帰の型紙（リスト／深さ）
 - 3.3 タートルと再帰の組み合わせパターン
-- 各節末メモ: 三角ロジックで整理予定
 
 ### 第4章　フラクタルを描く（レッスン4–6日目）
 
 - 原稿: [ch04-fractals.md](books/racket-turtle-fractals/ch04-fractals.md)
+- コード: [ch04-fractals.rkt](code/ch04-fractals.rkt)
+- 状態: ドラフト（Depth テンプレ・#2）
+- 4.0 共通データと共通テンプレート
 - 4.1 フラクタルツリー
 - 4.2 コッホ曲線・コッホ雪片
 - 4.3 シェルピンスキーの三角形
 - 4.4 ドラゴン曲線と発展図形
-- 各節末メモ: 三角ロジックで整理予定
 
 ### 終章　高校数学の学びは大人でも楽しい（レッスン7日目）
 
