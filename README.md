@@ -102,6 +102,7 @@
 | C | 復習と例題集 | [appendix-c-exercises.md](books/racket-turtle-fractals/appendix-c-exercises.md) |
 | D | 参考文献 | [appendix-d-references.md](books/racket-turtle-fractals/appendix-d-references.md) |
 | E | BSL と `#lang racket` の使い分け | [appendix-e-lang-policy.md](books/racket-turtle-fractals/appendix-e-lang-policy.md) |
+| F | Racket Plot の基礎と Headless 画像生成 | [appendix-f-plot.md](books/racket-turtle-fractals/appendix-f-plot.md) |
 
 ## 言語方針 A
 

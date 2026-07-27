@@ -178,10 +178,33 @@ title: "第4章　フラクタルを描く"
 
 > **三角ロジック**: フラクタルの「複雑さ」は深さの関数。データ（depth）を抑えれば計算も描画も有限のまま。
 
+##### コラム: プロットによる再帰深さと計算量の可視化
+
+再帰構造を描画する際、深さ `depth` が 1 増えるごとに描画ステップ数や頂点数は指数関数的（$2^d$, $4^d$, $3^d$ 等）に増加します。  
+Racket の公式 `plot` ライブラリの `discrete-histogram` を使うと、深さごとの計算量増加を視覚的なヒストグラムとして可視化できます。
+
+```racket
+#lang racket
+(require plot)
+
+;; 深さ d における二分木のノード数 (2^d)
+(define (tree-node-count depth) (expt 2 depth))
+
+;; ヒストグラム描画
+(plot (discrete-histogram (map (lambda (d) (vector (number->string d) (tree-node-count d)))
+                               '(0 1 2 3 4 5 6)))
+      #:title "Binary Tree Node Count by Depth"
+      #:x-label "Depth" #:y-label "Nodes")
+```
+
+（付属コード: `code/ch04-recursion-plot.rkt`）
+
 #### 4.5 付属コード
 
 ```bash
 racket code/ch04-fractals.rkt
+racket code/ch04-recursion-plot.rkt
 ```
 
 構造テスト（ステップ数・リスト非空）を自動実行。`draw` はコメントアウト既定。
+

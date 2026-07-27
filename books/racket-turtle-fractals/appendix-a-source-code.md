@@ -11,6 +11,9 @@ title: "付録A　完全ソース一覧"
 | 第2章 | [`code/ch02-turtle.rkt`](../../code/ch02-turtle.rkt) | `#lang racket` + racket-turtle | ドラフト・構造テスト |
 | 第3章 | [`code/ch03-recursion.rkt`](../../code/ch03-recursion.rkt) | 同上 | ドラフト・テスト済 |
 | 第4章 | [`code/ch04-fractals.rkt`](../../code/ch04-fractals.rkt) | 同上 | ドラフト・テスト済 |
+| 第4章コラム | [`code/ch04-recursion-plot.rkt`](../../code/ch04-recursion-plot.rkt) | `#lang racket` + plot | テスト済 |
+| 終章 | [`code/ch05-plot-spiral.rkt`](../../code/ch05-plot-spiral.rkt) | `#lang racket` + plot | テスト済 |
+| 付録 F | [`code/appendix-f-headless-plot.rkt`](../../code/appendix-f-headless-plot.rkt) | `#lang racket` + plot | テスト済 |
 
 リポジトリ: https://github.com/bluehive/mypublish-racket-turtle
 
@@ -21,6 +24,9 @@ racket code/ch01-basics.rkt
 racket code/ch02-turtle.rkt
 racket code/ch03-recursion.rkt
 racket code/ch04-fractals.rkt
+racket code/ch04-recursion-plot.rkt
+racket code/ch05-plot-spiral.rkt
+racket code/appendix-f-headless-plot.rkt
 ```
 
 描画は各ファイル末尾の `(draw …)` コメントを外すか、DrRacket で評価する。
