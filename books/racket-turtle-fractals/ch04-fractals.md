@@ -1,157 +1,121 @@
 ---
-title: "第4章　フラクタルを描く"
+title: "第4章　フラクタルを描く——自然の造形美に挑もう"
 ---
 
 > **この章のゴール**  
-> 深さ `Depth` をデータとみなし、ツリー・コッホ・シェルピンスキー・ドラゴンを**テンプレート駆動**で実装する。  
-> **付属コード**: `code/ch04-fractals.rkt`  
-> **レッスン**: 4–6日目  
-> **howtocode**: データ定義が `cond` の枝を決める / [htdp_templates](https://howtocode.pages.dev/htdp_templates)
+> 「深さ `depth`」と「縮小サイズ `size`」を受け取る共通テンプレートを使って、フラクタルツリー・コッホ曲線・シェルピンスキーの三角形・ドラゴン曲線を自分の手で実装する。  
+> **想定読者**: 夏休みにプログラミングを楽しみたい高校生  
+> **付属コード**: `code/ch04-fractals.rkt` / `code/ch04-recursion-plot.rkt`
 
-#### 4.0 共通データと共通テンプレート
+---
 
-```text
-;; Depth is a Natural
-;; interp. 自己相似の残り段数。0 なら「これ以上分割しない」。
+#### 4.0 フラクタルを描く万能テンプレート（共通型紙）
 
-;; Size is a PositiveNumber
-;; interp. 今の辺・枝の長さ（ピクセル）。
-```
-
-**共通テンプレート（主張）**
+さまざまな種類のフラクタル図形がありますが、実はどれも**たった1つの共通テンプレート（骨組み）** から作られています。
 
 ```racket
 (define (fractal d size)
   (cond
-    [(<= d 0) (leaf size)]                 ; 基底: 最小部品
-    [else (branch size                       ; 結合規則は図形ごと
+    [(<= d 0) (leaf size)]                     ; 基底条件: 深さ 0 なら最小パーツを描く
+    [else (combine size                          ; 再帰ステップ: 縮小した自分を組み合わせて描く
                    (fractal (sub1 d) (next-size size)))]))
 ```
 
-| 図形 | `leaf` | `branch` / 分割規則 | `next-size` |
-|------|--------|---------------------|-------------|
-| ツリー | 短い線1本 | 幹 + 左右に再帰 | `* 0.7` など |
-| コッホ | 線分1本 | 1辺→4辺置換 | `/ 3` |
-| シェルピンスキー | 三角形1つ | 3隅に再帰 | `/ 2` |
-| ドラゴン | 線分 | 折りたたみ L/R | 固定 or `/√2` |
+| 図形名 | 基底パーツ (`leaf`) | 再帰の呼び出し回数 | 1ステップごとのサイズ変化 (`next-size`) |
+|---|---|---|---|
+| **フラクタルツリー** | 短い直線1本 | **2回** (左右の枝) | `(* size 0.7)` |
+| **コッホ曲線** | 直線1本 | **4回** (山型置換) | `(/ size 3)` |
+| **シェルピンスキー** | 正三角形1つ | **3回** (3隅の頂点) | `(/ size 2)` |
+| **ドラゴン曲線** | 直線1本 | **2回** (折りたたみ) | 固定または `(/ size (sqrt 2))` |
 
-> **三角ロジック**: 図形の違いは「データの解釈」と「combine の中身」だけ。再帰の骨格は共通。
+---
 
-#### 4.1 フラクタルツリー
+#### 4.1 フラクタルツリー（枝分かれする木）
 
-##### 解釈
-
-幹を `size` だけ描き、左に `angle`、右に `-angle` だけ向きを変え、長さを縮めて同じ木を描く。描き終わったら向きを戻す（亀の状態を崩さない）。
-
-##### デザインレシピ
-
-1. **Signature**: `(tree depth size angle) -> CommandList`  
-2. **Examples**: depth 0 → 線1本；depth 1 → 幹+左右の短い枝  
-3. **Template**: `depth-temp` + 回転の前後対称  
-4. **Body**:
+##### 🌳 どうやって木を描くの？
+1. まず幹（直線）を長さ `size` だけ前進して描きます。
+2. 左へ角度 `angle` だけ向きを変え、深さ `(sub1 depth)`・長さ `(* size 0.7)` で **「小さな木」を再帰呼び出し** します。
+3. 次に右へ `(* 2 angle)` だけ向きを変え、同じように **「小さな木」を再帰呼び出し** します。
+4. 描き終わったら元の向きと位置に戻ります。
 
 ```racket
 (define (tree depth size angle)
   (cond
     [(<= depth 0)
-     (list (forward size) (forward (- size)))] ; 往復で位置を戻す流儀もある
+     (list (forward size) (forward (- size)))]   ; 基底: 往復して元の場所へ戻る
     [else
      (append
-      (list (forward size))
+      (list (forward size))                      ; 幹を描く
       (list (turn-left angle))
-      (tree (sub1 depth) (* size 0.7) angle)
+      (tree (sub1 depth) (* size 0.7) angle)     ; 左の木を再帰描画
       (list (turn-right (* 2 angle)))
-      (tree (sub1 depth) (* size 0.7) angle)
-      (list (turn-left angle))
-      (list (forward (- size))))]))
+      (tree (sub1 depth) (* size 0.7) angle)     ; 右の木を再帰描画
+      (list (turn-left angle))                   ; 向きを元に戻す
+      (list (forward (- size))))]))              ; 位置を元に戻す
 ```
 
-実装の細部（位置を戻すか、pen-up で戻るか）は付属コードを正とする。重要なのは **depth が1減り size が縮小する**こと。
+たったこれだけのコードで、`depth` を 6 や 8 に増やすと、本物の樹木のような美しい大木が描かれます！
 
-> **三角ロジック**: 木の自己相似＝「小さな木が2つ」というデータ分解。
+---
 
-#### 4.2 コッホ曲線・コッホ雪片
+#### 4.2 コッホ曲線・コッホ雪片（海岸線と雪の結晶）
 
-##### 動機: 海岸線の長さ
-
-ものさしを細かくするほど海岸線は長く測れる——コッホ曲線はその理想化です。1辺を次の4辺に置換します。
+##### ❄️ 直線が「山」に化ける魔法
+コッホ曲線は、1本のまっすぐな線を、中央が山型に盛り上がった **4本の小さな線** に置き換える処理を繰り返すフラクタルです。
 
 ```text
-  ------          が次の段で
-  --/\--          （中央が山型）
+【元の線 (depth 0)】     ───────────────
+【1回置換 (depth 1)】    ──────/\──────
 ```
 
-各小辺の長さは元の `1/3`。
-
-##### データとテンプレート
-
 ```racket
-;; koch-line: Depth Size -> CommandList
 (define (koch-line depth size)
   (cond
     [(<= depth 0)
-     (list (forward size))]
+     (list (forward size))]                      ; 基底: 直線1本
     [else
-     (define s3 (/ size 3))
-     (append (koch-line (sub1 depth) s3)
+     (define s3 (/ size 3.0))                    ; 1/3 のサイズ
+     (append (koch-line (sub1 depth) s3)         ; 1本目進む
              (list (turn-left 60))
-             (koch-line (sub1 depth) s3)
+             (koch-line (sub1 depth) s3)         ; 2本目 (山の上り)
              (list (turn-right 120))
-             (koch-line (sub1 depth) s3)
+             (koch-line (sub1 depth) s3)         ; 3本目 (山の下り)
              (list (turn-left 60))
-             (koch-line (sub1 depth) s3))]))
+             (koch-line (sub1 depth) s3))]))     ; 4本目進む
 ```
 
-雪片: 正三角形の各辺を `koch-line` に置き換え、外角 120° でつなぐ。
+正三角形の3つの辺それぞれに `koch-line` を適用すると、本物の雪の結晶のような **コッホ雪片（Koch Snowflake）** になります！
 
-```racket
-(define (koch-snowflake depth size)
-  (append (koch-line depth size)
-          (list (turn-right 120))
-          (koch-line depth size)
-          (list (turn-right 120))
-          (koch-line depth size)))
-```
-
-**howtocode 的チェック**: 基底は「線分1本」だけ。置換規則はデータ（depth>0）の枝にだけ書く。
-
-> **三角ロジック**: コッホは「1辺 → 4辺」の文法。再帰はその文法の適用回数。
+---
 
 #### 4.3 シェルピンスキーの三角形
 
-##### 解釈
-
-大きな正三角形の各頂点付近に、一辺半分のシェルピンスキーを置く（または中抜き規則）。タートルでは「三角形を描く」「次の頂点へ移動」を組み合わせる。
-
-##### テンプレート
+##### 🔺 三角形の中に無限に潜む三角形
+シェルピンスキーの三角形は、大きな正三角形の各3隅の頂点に、1/2 サイズの小さな正三角形を再帰的に配置していくフラクタルです。
 
 ```racket
 (define (sierpinski depth size)
   (cond
     [(<= depth 0)
-     (triangle-outline size)]   ; 正三角形1つ
+     (triangle-outline size)]                    ; 基底: 一辺 size の正三角形1つ
     [else
-     (define half (/ size 2))
-     (append (sierpinski (sub1 depth) half)
-             (move-to-next-vertex half)
-             (sierpinski (sub1 depth) half)
-             (move-to-next-vertex half)
-             (sierpinski (sub1 depth) half))]))
+     (define half (/ size 2.0))
+     (append
+      (sierpinski (sub1 depth) half)             ; 下左の小さな三角形
+      (list (forward half))
+      (sierpinski (sub1 depth) half)             ; 下右の小さな三角形
+      (list (forward (- half)) (turn-left 60) (forward half) (turn-right 60))
+      (sierpinski (sub1 depth) half)             ; 上の小さな三角形
+      (list (turn-left 60) (forward (- half)) (turn-right 60)))]))
 ```
 
-`triangle-outline` と移動は付属コードで定義。深さ d の図は深さ d-1 の図が**3つ**——データ分解が3枝。
+---
 
-> **三角ロジック**: 枝の本数（2=木、3=シェルピンスキー、4=コッホ辺）が `cond` 内の再帰呼び出し回数と一致する。
+#### 4.4 ドラゴン曲線（紙折りから生まれる竜）
 
-#### 4.4 ドラゴン曲線と発展図形
-
-##### ドラゴン（折り紙の折りたたみ）
-
-古典的な定義のひとつ: 曲線を「左折り・右折り」の列で表し、次の世代は規則で伸ばす。タートル版の簡易実装は次の型紙です。
+紙テープを何度も半分に折りたたんでから、折り目を $90^\circ$ に開いたときに現れる不思議な曲線です。左右の折り曲げ方向の符号を切り替えながら再帰呼び出しを行います。
 
 ```racket
-;; dragon: Depth Size TurnDir -> CommandList
-;; TurnDir is +1 (左系) または -1 (右系)
 (define (dragon depth size turn)
   (cond
     [(<= depth 0)
@@ -162,23 +126,9 @@ title: "第4章　フラクタルを描く"
              (dragon (sub1 depth) size -1))]))
 ```
 
-（向きの符号の取り方は実装で調整。付属コードを正とする。）
+---
 
-##### 発展
-
-- 四角形フラクタル: コッホの角を 90° 系にした変種  
-- 公式の花・星螺旋（第3章）を「スタンプ＋再帰」で再訪  
-- `2htdp/image` だけで組み立てる別解（終章へ）
-
-##### 練習
-
-1. `koch-line` の depth 0,1,2 で `forward` の回数が 1,4,16 になることをコードで確認  
-2. 木の `0.7` を `0.5` に変えて見た目の違いを観察  
-3. （任意）ドラゴン depth 8 以上はステップ数が爆発するので、テストは depth≤4 に限定  
-
-> **三角ロジック**: フラクタルの「複雑さ」は深さの関数。データ（depth）を抑えれば計算も描画も有限のまま。
-
-##### コラム: Racket Plot で再帰の「ノード数爆発」を可視化する
+#### 💡 コラム: Racket Plot で再帰の「ノード数爆発」を可視化する
 
 フラクタルを描画する際、深さ `depth` が 1 増えるごとに描画ステップ数や頂点数は $2^d, 3^d, 4^d$ と指数関数的に急増します。この「構造の爆発」をタートルの線の本数だけでなく、数値やグラフで視覚的に捉えるのに最適なのが Racket 公式の **`plot`** ライブラリです。
 
@@ -214,13 +164,11 @@ title: "第4章　フラクタルを描く"
 🚀 **あとは自分で勉強してみて！**  
 Racket の `plot` ライブラリには、散布図や折れ線、極座標プロット（`polar-function`）、3D 曲面など、データサイエンス言語 R に匹敵する豊かな機能が詰まっています。ぜひ公式ドキュメント（[https://docs.racket-lang.org/plot/](https://docs.racket-lang.org/plot/)）を片手に、色々な関数やデータをプロットして自分で探求してみてください！ （詳細は [付録 F](appendix-f-plot.md) も参照）
 
-#### 4.5 付属コード
+#### 4.5 付属コードの実行
 
 ```bash
 racket code/ch04-fractals.rkt
 racket code/ch04-recursion-plot.rkt
 ```
 
-構造テスト（ステップ数・リスト非空）を自動実行。`draw` はコメントアウト既定。
-
-
+構造テスト（ステップ数・リスト非空）が自動実行されます。自作したフラクタルを DrRacket で表示して楽しんでみましょう！
