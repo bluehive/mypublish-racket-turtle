@@ -50,7 +50,7 @@ R の `ggplot2` のように「特別な記法や文法（`+` 演算子による
 | `points` | 散布図データ | `(points (list (vector 1 2) (vector 3 4)))` |
 | `lines` | 頂点を結ぶ折れ線データ | `(lines (list (vector 0 0) (vector 1 1)))` |
 | `discrete-histogram` | 離散ヒストグラム（棒グラフ） | `(discrete-histogram (list (vector 'A 10) ...))` |
-| `polar-function` | 極座標関数（らせん・極方程式） | `(polar-function (lambda (t) t) 0 (* 4 pi))` |
+| `polar` | 極座標関数（らせん・極方程式） | `(polar (lambda (t) t) 0 (* 4 pi))` |
 | `contour-intervals` | 2変数関数の等高線帯表示 | `(contour-intervals (lambda (x y) (+ (* x x) (* y y))))` |
 | `surface3d` | 3次元立体曲面 | `(surface3d (lambda (x y) (* (sin x) (cos y))) -pi pi -pi pi)` |
 

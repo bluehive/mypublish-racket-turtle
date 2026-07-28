@@ -162,7 +162,7 @@ title: "第4章　フラクタルを描く——自然の造形美に挑もう"
 ---
 
 🚀 **あとは自分で勉強してみて！**  
-Racket の `plot` ライブラリには、散布図や折れ線、極座標プロット（`polar-function`）、3D 曲面など、データサイエンス言語 R に匹敵する豊かな機能が詰まっています。ぜひ公式ドキュメント（[https://docs.racket-lang.org/plot/](https://docs.racket-lang.org/plot/)）を片手に、色々な関数やデータをプロットして自分で探求してみてください！ （詳細は [付録 F](appendix-f-plot.md) も参照）
+Racket の `plot` ライブラリには、散布図や折れ線、極座標プロット（`polar`）、3D 曲面など、データサイエンス言語 R に匹敵する豊かな機能が詰まっています。ぜひ公式ドキュメント（[https://docs.racket-lang.org/plot/](https://docs.racket-lang.org/plot/)）を片手に、色々な関数やデータをプロットして自分で探求してみてください！ （詳細は [付録 F](appendix-f-plot.md) も参照）
 
 #### 4.5 付属コードの実行
 
