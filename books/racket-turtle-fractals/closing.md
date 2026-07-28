@@ -36,14 +36,14 @@ title: "終章　数学とプログラミングの冒険を振り返って"
 - **タートル描画**: 「ペンを動かして線を描く」（手続き型・手順）
 - **Plot 描画**: 「関数 $r(\theta)$ やデータ系列をプロットする」（宣言型・関数型）
 
-タートルで描いた対数螺旋（Spiral）は、`plot` の極座標関数 `polar-function` を使うと、次のように宣言的に美しく記述できます。
+タートルで描いた対数螺旋（Spiral）は、`plot` の極座標関数 `polar` を使うと、次のように宣言的に美しく記述できます。
 
 ```racket
 #lang racket
 (require plot)
 
 ;; 対数螺旋 r(theta) = e^(0.15 * theta) のプロット
-(plot (polar-function (lambda (theta) (exp (* 0.15 theta))) 0 (* 4 pi))
+(plot (polar (lambda (theta) (exp (* 0.15 theta))) 0 (* 4 pi))
       #:title "Logarithmic Spiral")
 ```
 

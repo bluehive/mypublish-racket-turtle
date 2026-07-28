@@ -21,4 +21,10 @@
 (check-equal? (log-spiral-r 0.0) 1.0)
 (check-true (> (log-spiral-r 2.0) (log-spiral-r 1.0)))
 
+;; ------------------------------------------------------------
+;; プロット呼び出し例 (DrRacket で実行)
+;; ------------------------------------------------------------
+;; (plot (polar (lambda (t) (log-spiral-r t 1.0 0.15)) 0 (* 4 pi))
+;;       #:title "Logarithmic Spiral")
+
 (displayln "ch05-plot-spiral.rkt: All tests passed!")
