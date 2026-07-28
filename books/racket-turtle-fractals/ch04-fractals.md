@@ -178,10 +178,49 @@ title: "第4章　フラクタルを描く"
 
 > **三角ロジック**: フラクタルの「複雑さ」は深さの関数。データ（depth）を抑えれば計算も描画も有限のまま。
 
+##### コラム: Racket Plot で再帰の「ノード数爆発」を可視化する
+
+フラクタルを描画する際、深さ `depth` が 1 増えるごとに描画ステップ数や頂点数は $2^d, 3^d, 4^d$ と指数関数的に急増します。この「構造の爆発」をタートルの線の本数だけでなく、数値やグラフで視覚的に捉えるのに最適なのが Racket 公式の **`plot`** ライブラリです。
+
+```racket
+#lang racket
+(require plot)
+
+;; 深さ d における二分木のノード数 (2^d)
+(define (tree-node-count depth) (expt 2 depth))
+
+;; ヒストグラム描画
+(plot (discrete-histogram (map (lambda (d) (vector (number->string d) (tree-node-count d)))
+                               '(0 1 2 3 4 5 6)))
+      #:title "Binary Tree Node Count by Depth"
+      #:x-label "Depth" #:y-label "Nodes")
+```
+
+（付属コード: `code/ch04-recursion-plot.rkt`）
+
+---
+
+💡 **ここで押さえておきたい Racket `plot` の3大魅力（売り）**
+
+1. **関数型レンダラーの自由な重ね合わせ（Composability）**  
+   `plot` に渡すのは単なる Racket のリスト `(list (discrete-histogram ...) (function ...))` です。複雑な文法ルールなしで、グラフや散布図、注釈を自由自在にレイヤー化できます。
+2. **2D から 3D・等高線（Contour / Isosurface）まで標準対応**  
+   外部の重いパッケージをインストールしなくても、`plot3d` や `surface3d` を呼び出すだけで、DrRacket 上でマウス操作可能な 3D サーフェスプロットが即座に動作します。
+3. **対話描画 & Headless 自動生成 (`plot-file`) の二刀流**  
+   DrRacket 上での対話的な確認と、スクリプトや CI、書籍ビルドでの PNG/SVG 自動ファイル保存が全く同じ描画ツリーコードでシームレスに行えます。
+
+---
+
+🚀 **あとは自分で勉強してみて！**  
+Racket の `plot` ライブラリには、散布図や折れ線、極座標プロット（`polar-function`）、3D 曲面など、データサイエンス言語 R に匹敵する豊かな機能が詰まっています。ぜひ公式ドキュメント（[https://docs.racket-lang.org/plot/](https://docs.racket-lang.org/plot/)）を片手に、色々な関数やデータをプロットして自分で探求してみてください！ （詳細は [付録 F](appendix-f-plot.md) も参照）
+
 #### 4.5 付属コード
 
 ```bash
 racket code/ch04-fractals.rkt
+racket code/ch04-recursion-plot.rkt
 ```
 
 構造テスト（ステップ数・リスト非空）を自動実行。`draw` はコメントアウト既定。
+
+
