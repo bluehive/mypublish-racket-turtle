@@ -1,147 +1,116 @@
 ---
-title: "第3章　再帰への橋渡し"
+title: "第3章　再帰への橋渡し——自分自身を呼び出す魔法"
 ---
 
 > **この章のゴール**  
-> howtocode / HtDP の**データ定義 → テンプレート**で再帰を書き、命令リストを再帰で組み立てられる。  
-> **言語**: 概念は BSL でも可／描画例は `#lang racket` + racket-turtle  
-> **付属コード**: `code/ch03-recursion.rkt`  
-> **参照**: [howtocode htdp_templates](https://howtocode.pages.dev/htdp_templates) / 姉妹編 [ch02-recursion](https://github.com/bluehive/mypublish-gameoflife/blob/main/books/racket-game-of-life/ch02-recursion.md) / [公式 再帰例](https://docs.racket-lang.org/racket_turtle/racket_turtle_examples_with_recursion.html)  
-> **レッスン**: 3日目
+> プログラミング最大の魔法「再帰（Recursion）」の仕組みを根本から理解し、基底条件と再帰ステップを使って徐々に変化する渦巻きや繰り返し図形を描けるようになる。  
+> **想定読者**: 夏休みにプログラミングを楽しみたい高校生  
+> **付属コード**: `code/ch03-recursion.rkt`
 
-#### 3.0 なぜ再帰か（データ駆動の答え）
+---
 
-第2章の `repeat` は「同じ部品を k 回」に強いです。しかしフラクタルは、
+#### 3.0 なぜ「再帰」が必要なのか？
 
-- 大きな形の**中に、相似な小さな形**があり  
-- 小ささの尺度（深さ・長さ）が**1段階ずつ減る**
+##### 🪆 マトリョーシカ人形と鏡の中の自分
+「**再帰（さいき / Recursion）**」という言葉を聞いたことがありますか？
 
-というデータです。howtocode が言うとおり、**データの自己参照が、関数の自己呼び出し（再帰）を強制します**。
+ロシアの伝統工芸品 **マトリョーシカ人形** を思い浮かべてみてください。大きな人形のパカッと蓋を開けると、中から一回り小さな人形が出てきます。その小さな人形の蓋をまた開けると、さらに小さな人形が出てきます。最後に一番小さな「これ以上開かない人形」にたどり着いて終わりになります。
+
+このように、**「全体と同じ仕組みが、内部に小さくなって繰り返し入っている構造」** をプログラミングで表現するのが **再帰** です。
+
+##### 🐱 Scratch の「繰り返し」と「再帰」の違い
+第2章で使った `repeat`（繰り返し）は、「同じ動きをそのまま回数分繰り返す」のには便利でした。
+
+しかし、次のような図形を描きたいときはどうでしょう？
+- 1周進むごとに、**前進する距離が少しずつ長くなる螺旋（渦巻き）**
+- 1段階進むごとに、**枝が半分に小さくなって2本に増える木**
+
+Scratch の `[ (10) 回繰り返す ]` ブロックでは、「毎回長さが変わる」「分岐して2本に増える」といった複雑な変化を表現しようとすると、変数が増えすぎて頭がパニックになってしまいます。
+
+Racket の **再帰** を使えば、**「自分自身を呼び出す」** というたった数行のコードを書くだけで、どんなに複雑な変化や拡大・縮小も完璧に表現できるようになります！
+
+---
+
+#### 3.1 再帰を支える2つの絶対ルール
+
+再帰プログラムを書くときは、必ず次の **2つの約束（ルール）** を守る必要があります。
 
 ```text
-  データ定義（場合分け）  →  テンプレート（cond の枝）  →  本体
+               ┌── 1. 基底条件 (Base case) : 「ここで止まれ！」という終了条件
+  再帰のルール ┤
+               └── 2. 再帰ステップ (Recursive step) : 問題を少し小さくして自分を呼ぶ
 ```
 
-> **三角ロジック**: 再帰は技巧ではなく、自己参照データの**型紙を埋めた結果**である。
+1. **基底条件（Base Case）**: 「これ以上小さくならない最小の状態（停止条件）」。マトリョーシカの一番小さな人形にあたります。これがないと、プログラムは永久に止まらずフリーズしてしまいます（無限ループ）。
+2. **再帰ステップ（Recursive Step）**: 「問題を1段階だけ小さくして、自分自身（関数）を呼び出すステップ」。
 
-#### 3.1 繰り返す図形から再帰へ
-
-##### 螺旋: 「長さが増えるステップ」を n 回
-
-公式の螺旋は、おおよそ次の形です（`times` が残り回数）。
+##### 🌀 徐々に大きくなる螺旋（Spiral）を描いてみよう
+「1歩進んで左に曲がる。次は少し長さを伸ばして前進する」を繰り返す螺旋関数を作ってみましょう。
 
 ```racket
-;; spiral: Number Number Number -> CommandList
-;; a = 回転角, x = 今の前進距離, times = 残りステップ
+#lang racket
+(require teachpacks/racket-turtle)
+
+;; spiral: 回転角 a, 現在の長さ x, 残りステップ times -> CommandList
 (define (spiral a x times)
-  (if (< times 0)
-      empty
-      (append (list (forward x) (turn-left a))
-              (spiral a (+ x 2) (sub1 times)))))
-```
-
-**データの見方（Interval / カウントダウン）**
-
-```text
-;; TimesLeft is an Integer
-;; interp. まだ描くステップの残り。0 未満で停止。
-```
-
-**テンプレート（自然数・カウントダウン型）**
-
-```racket
-(define (times-temp n)
   (cond
-    [(< n 0) (...)]           ; または (<= n 0)
-    [else (... n (times-temp (sub1 n)))]))
+    [(<= times 0) empty]   ; 1. 基底条件: 残り回数が 0 以下なら空のリストを返して終了！
+    [else
+     (append (list (forward x) (turn-left a))             ; 今の1ステップを描く
+             (spiral a (+ x 2) (sub1 times)))]))          ; 2. 再帰ステップ: 長さ x+2, 回数 times-1 で自分を呼ぶ！
 ```
 
-`repeat` では「毎回 x が 2 増える」を表現しにくい。**状態がステップごとに変わる**ときは再帰が自然です。
+- `(sub1 times)` は `times - 1` の意味です。
+- 呼び出されるたびに `times` が 1 ずつ減っていくので、いつか必ず `(<= times 0)` の基底条件に引っかかり、計算が安全にストップします。
 
-星・花の螺旋（公式 5.3–5.4）も同じ型紙で、スタンプ画像のリストを再帰生成します。
+---
 
-> **三角ロジック**: 「変化するパラメータ」がデータなら、基底ケース（止まる条件）をデータ定義に先に書く。
+#### 3.2 2つの主要な再帰テンプレート（型紙）
 
-#### 3.2 再帰の型紙（構造的再帰の直感）
+How to Design Programs (HtDP) の教えでは、再帰のコードは勘で書くのではなく、**データの形に合わせた「テンプレート（型紙）」** を使って機械的に組み立てます。
 
-howtocode の4パターンのうち、本章の本線は次の2つです。
-
-##### パターン A: リストの構造的再帰（第1章の復習）
-
-```text
-;; ListOfNumber is one of:
-;;  - empty
-;;  - (cons Number ListOfNumber)
-```
-
-```racket
-(define (list-of-number-temp lon)
-  (cond
-    [(empty? lon) (...)]
-    [else (... (first lon)
-               (list-of-number-temp (rest lon)))]))
-```
-
-例: 合計・長さ・所属判定（`contains?`）。
-
-##### パターン B: 自然数（深さ）の再帰
-
-```text
-;; Depth is a Natural
-;; interp. 再帰の残り段数。0 で葉（何もしない / 最小部品だけ）。
-```
+##### 📄 パターンA: 自然数（深さ・カウントダウン）の再帰
+「残り深さ `depth`」や「残り回数 `times`」といった数値を 1 ずつ減らしながら繰り返す型紙です。
 
 ```racket
 (define (depth-temp d)
   (cond
-    [(zero? d) (...)]                      ; 基底
-    [else (... d (depth-temp (sub1 d)))])) ; 再帰
+    [(<= d 0) (...)]                       ; 基底条件 (0 以下なら止まる)
+    [else (... d (depth-temp (sub1 d)))])) ; 再帰ステップ (d を 1 減らして自分を呼ぶ)
 ```
 
-##### factorial（短い例）
+###### 🧮 階乗（Factorial: $n!$）の例
+数学の階乗 $n! = n \times (n-1) \times \dots \times 1$ も、この型紙で美しく書けます。
 
 ```racket
-;; factorial: Natural -> Natural
 (define (factorial n)
   (cond
-    [(zero? n) 1]
-    [else (* n (factorial (sub1 n)))]))
+    [(zero? n) 1]                           ; 0! = 1 (基底)
+    [else (* n (factorial (sub1 n)))]))     ; n * (n-1)! (再帰)
 ```
 
-| 段 | 意味 |
-|----|------|
-| データ | Natural（0 または n+1 の形） |
-| テンプレ | `zero?` / `sub1` の2枝 |
-| 本体 | 基底 1、再帰 `(* n …)` |
-
-デザインレシピ5段（howtocode）:
-
-1. Signature / purpose / stub  
-2. Examples（`check-expect` / `check-equal?`）  
-3. Template（上の `depth-temp`）  
-4. Body  
-5. Test / review  
-
-BSL ではテンプレ途中の `...` が許されます（第1章・姉妹編第2章）。本編の `#lang racket` では完成形を書き、テストで固めます。
-
-> **三角ロジック**: リスト再帰＝「要素の並び」、深さ再帰＝「相似の段数」。フラクタルは後者＋図形の分割規則。
-
-#### 3.3 タートルと再帰の組み合わせパターン
-
-##### パターン1: 命令リストを `append` / `cons` で伸ばす
+##### 📄 パターンB: リストの構造的再帰
+リストの先頭 `(first lst)` を1つ処理し、残りのリスト `(rest lst)` を再帰に渡す型紙です。
 
 ```racket
-(define (spiral a x times)
-  (if (< times 0)
-      empty
-      (append (list (forward x) (turn-left a))
-              (spiral a (+ x 2) (sub1 times)))))
+(define (list-temp lst)
+  (cond
+    [(empty? lst) (...)]                   ; 基底条件 (リストが空なら止まる)
+    [else (... (first lst)                 ; 先頭の要素を処理
+               (list-temp (rest lst)))]))  ; 残りのリストで自分を呼ぶ
 ```
 
-- 基底: `empty`（何も描かない）  
-- 再帰: 今の1ステップ + 残りの螺旋  
+---
 
-##### パターン2: 「1ステップ分」を関数に切り出す（公式 spiral2）
+#### 3.3 タートル描画と再帰の組み合わせパターン
+
+タートルグラフィックスで再帰を使うとき、よく使うパターンは次の3つです。
+
+##### パターン1: `append` で命令をつなぎ合わせていく
+直前の `spiral` のように、`append` を使って「今の1ステップの命令」と「残りの再帰で生成される命令リスト」を繋ぎ合わせます。
+
+##### パターン2: 命令をパーツ化して `cons` でリスト化する
+1ステップ分の装飾（ペンの太さ変更など）を別関数に切り出し、リストのネストとして組み立てる方法です。
 
 ```racket
 (define (side-step x w a)
@@ -150,38 +119,28 @@ BSL ではテンプレ途中の `...` が許されます（第1章・姉妹編�
         (turn-left a)))
 
 (define (spiral2 x w a times)
-  (if (<= times 0)
-      empty
-      (cons (side-step x w a)
-            (spiral2 (+ x 5) (+ w 1) a (sub1 times)))))
-```
-
-ネストしたリストでも `draw` は解釈できる（公式どおり）。
-
-##### パターン3: 深さ d の図形 = 手前の作業 + 深さ d-1 の図形
-
-第4章の木・コッホは、だいたい次の型紙です。
-
-```racket
-(define (fractal-temp d size)
   (cond
-    [(<= d 0) (base-case size)]   ; 線分1本など
-    [else (combine size
-                   (fractal-temp (sub1 d) (smaller size)))]))
+    [(<= times 0) empty]
+    [else (cons (side-step x w a)
+                (spiral2 (+ x 4) (+ w 1) a (sub1 times)))]))
 ```
 
-`combine` の中身が「コッホ置換」や「左右の枝」になる。
+---
 
-##### 付属コードで確かめること
+#### 3.4 まとめと確認
 
-- `factorial` / `list-sum` / `spiral` のステップ数  
-- `command-steps` のような**純粋関数**でリスト長を数え、`rackunit`  
-- `(draw …)` は任意（コメントアウト既定）
+再帰の考え方はマスターできましたか？
+ポイントは以下の3点です。
 
-##### 練習
+1. **基底条件（止まる条件）** を最初に書く。
+2. **再帰ステップ** で問題を1段階小さくして自分を呼ぶ。
+3. リストや描画命令は `append` や `cons` で繋ぎ合わせる。
 
-1. `spiral` の `times` を 10 にしたとき、`forward` は何回か（手計算 + コード）  
-2. `depth-temp` を埋めて「深さ d のとき `forward` を d 回だけする」命令リストを書け  
-3. 第2章の `regular-polygon` を、`repeat` ではなく再帰 `poly-rec` で書け  
+付属コード `code/ch03-recursion.rkt` には、螺旋や階乗のテストコードが含まれています。
 
-> **三角ロジック**: 第4章へ進む前に、「基底・縮小・結合」の3語で自分の関数を説明できること。
+```bash
+racket code/ch03-recursion.rkt
+```
+
+さあ、再帰という最強の武器を手に入れました！  
+次章では、この再帰を使って、いよいよ本命である **フラクタル図形（ツリー・コッホ曲線・シェルピンスキー・ドラゴン曲線）** を描き出します！
