@@ -58,6 +58,9 @@ Racket の **再帰** を使えば、**「自分自身を呼び出す」** と�
     [else
      (append (list (forward x) (turn-left a))             ; 今の1ステップを描く
              (spiral a (+ x 2) (sub1 times)))]))          ; 2. 再帰ステップ: 長さ x+2, 回数 times-1 で自分を呼ぶ！
+
+;; 🖥️ DrRacket で画面に描画して確かめる呼び出し例
+(draw (spiral 90 5 40))
 ```
 
 - `(sub1 times)` は `times - 1` の意味です。
@@ -123,6 +126,9 @@ How to Design Programs (HtDP) の教えでは、再帰のコードは勘で書�
     [(<= times 0) empty]
     [else (cons (side-step x w a)
                 (spiral2 (+ x 4) (+ w 1) a (sub1 times)))]))
+
+;; 🖥️ DrRacket で画面に描画して確かめる呼び出し例
+(draw (spiral2 1 1 91 50))
 ```
 
 ---
