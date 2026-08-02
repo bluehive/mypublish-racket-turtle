@@ -69,14 +69,18 @@ Racket には、最初から用意されている基本データ型（値の種�
 ```racket
 ;; 構文: (define (関数名 引数1 引数2 …) 本体の式)
 
-;; square-of: 数 x を受け取り、x の2乗を返す関数
+;; square-of : Number -> Number
+;; 数 x を受け取り、x の2乗を返す
 (define (square-of x)
   (* x x))
 
-;; greet: 名前（文字列）を受け取り、挨拶文を返す関数
+;; greet : String -> String
+;; 名前（文字列）を受け取り、挨拶文を返す
 (define (greet name)
   (string-append "Hello, " name "!"))
 ```
+
+> 💡 **シグネチャ（型の契約）**: `;; square-of : Number -> Number` のようなコメントを **シグネチャ** と呼びます。「引数の型 引数の型 … -> 戻り値の型」の順に並び、関数の入出力をひと目で示します。本書では全編この表記で統一します。主な型は `Number`（数）・`String`（文字列）・`Boolean`（真偽）・`(listof Number)`（数のリスト）などです。
 
 - `(square-of 8)` を評価すると、`(* 8 8)` が計算されて `64` が返ってきます。
 - `(greet "Racket")` を評価すると、`"Hello, Racket!"` が返ってきます。
@@ -202,7 +206,8 @@ BSL では、リストを作る・調べるために以下の基本関数を使�
 リストを扱う関数を作るとき、よく使うパターンがあります。それは **「先頭と残りに分けて、残りをまた同じ関数に渡す」** というものです。リストの要素の個数（長さ）を数える関数を例に見てみましょう。
 
 ```racket
-;; my-length: リスト xs の長さを計算する関数
+;; my-length : (listof Number) -> Number
+;; リスト xs の長さを計算する
 (define (my-length xs)
   (cond
     [(empty? xs) 0]                        ; 1. 空リストなら長さは 0

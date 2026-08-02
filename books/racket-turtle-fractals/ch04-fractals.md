@@ -66,6 +66,8 @@ title: "第4章　フラクタルを描く——自然の造形美に挑もう"
 > `forward (- size)` は「同じ長さだけ後ろへ下がる」の意味です。戻し忘れると、次の枝が空中から生えたようにズレてしまいます。**フラクタル再帰 = 小さな自分を呼ぶ + （必要なら）位置と向きを元に戻す**、とセットで覚えましょう。
 
 ```racket
+;; tree : Number Number Number -> CommandList
+;; (depth: 深さ, size: 幹の長さ, angle: 枝の開き角度)
 (define (tree depth size angle)
   (cond
     [(<= depth 0)
@@ -96,6 +98,8 @@ title: "第4章　フラクタルを描く——自然の造形美に挑もう"
 ```
 
 ```racket
+;; koch-line : Number Number -> CommandList
+;; (depth: 置換の深さ, size: 線の長さ)
 (define (koch-line depth size)
   (cond
     [(<= depth 0)
@@ -121,6 +125,8 @@ title: "第4章　フラクタルを描く——自然の造形美に挑もう"
 シェルピンスキーの三角形は、大きな正三角形の各3隅の頂点に、1/2 サイズの小さな正三角形を再帰的に配置していくフラクタルです。
 
 ```racket
+;; sierpinski : Number Number -> CommandList
+;; (depth: 深さ, size: 一辺の長さ)
 (define (sierpinski depth size)
   (cond
     [(<= depth 0)
@@ -139,7 +145,7 @@ title: "第4章　フラクタルを描く——自然の造形美に挑もう"
 基底で使う `triangle-outline` は、第2章の `regular-polygon` を「正三角形に特化」させたものです（一辺を描く→120度左→もう一辺…を3回繰り返す）:
 
 ```racket
-;; triangle-outline: Number -> CommandList
+;; triangle-outline : Number -> CommandList
 ;; 一辺 size の正三角形の輪郭を描く命令リスト
 (define (triangle-outline size)
   (list (forward size)
@@ -174,6 +180,8 @@ title: "第4章　フラクタルを描く——自然の造形美に挑もう"
 紙テープを何度も半分に折りたたんでから、折り目を $90^\circ$ に開いたときに現れる不思議な曲線です。左右の折り曲げ方向の符号を切り替えながら再帰呼び出しを行います。
 
 ```racket
+;; dragon : Number Number Number -> CommandList
+;; (depth: 深さ, size: 線の長さ, turn: 折り曲げ方向 1 か -1)
 (define (dragon depth size turn)
   (cond
     [(<= depth 0)
@@ -205,6 +213,14 @@ title: "第4章　フラクタルを描く——自然の造形美に挑もう"
 ```
 
 （付属コード: `code/ch04-recursion-plot.rkt`）
+
+> **🧮 一口メモ: 計算量とコールスタック（情報II への橋渡し）**
+>
+> ノード数が $2^d$ と増えるとき、**計算にかかる時間**もおおよそ $2^d$ 倍に増えます（情報科学では「**時間計算量**」と呼びます）。$d=10$ なら約 1,000 ですが、$d=20$ で 100 万、$d=30$ で 10 億——**指数関数の爆発**は想像以上に速いのです。
+>
+> 一方、再帰呼び出しは「呼び出しの深さ」の分だけ記憶域（**コールスタック**）を積み上げます。第3章のマトリョーシカで言えば「同時に開いている人形の数」が深さ $d$ なので、スタック消費は $d$ に比例します（**空間計算量** $O(d)$）。第3章で見た Scratch の「スタック上限」とは、この積み上げの限界のことです。
+>
+> 高校「情報II」の「アルゴリズムと計算量」で学ぶ考え方の第一歩が、ここに隠れています。
 
 ---
 

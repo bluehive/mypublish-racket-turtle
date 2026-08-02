@@ -105,7 +105,9 @@ Racket の **再帰** は、戻り値もローカルな引数も自由に使え�
 #lang racket
 (require teachpacks/racket-turtle)
 
-;; spiral: 回転角 a, 現在の長さ x, 残りステップ times -> CommandList
+;; CommandList = 描画命令（forward など）のリスト。draw に渡すと順番に実行される
+;; spiral : Number Number Number -> CommandList
+;; (a: 回転角, x: 現在の長さ, times: 残りステップ)
 (define (spiral a x times)
   (cond
     [(<= times 0) empty]   ; 1. 基底条件: 残り回数が 0 以下なら空のリストを返して終了！
@@ -174,7 +176,7 @@ How to Design Programs (HtDP) の教えでは、再帰のコードは勘で書�
 次に、**ヘッダー（シグネチャ、目的、スタブ）** を作成します。
 
 ```racket
-;; List-of-names -> Boolean
+;; contains-flatt? : List-of-names -> Boolean
 ;; リストに "Flatt" が含まれているかを判定する
 (define (contains-flatt? alon)
   #false)
@@ -259,6 +261,31 @@ How to Design Programs (HtDP) の教えでは、再帰のコードは勘で書�
 ;; 🖥️ DrRacket で画面に描画して確かめる呼び出し例
 (draw (spiral2 1 1 91 50))
 ```
+
+---
+
+#### 🚀 発展コラム: もっと速く・省メモリに描く——末尾再帰とアキュムレータ
+
+ここまでの `spiral` や `steps` は、`append` で「今の1回分」と「残りの命令リスト」をつなぎ合わせていました。この書き方は**読んで理解しやすい**のが最大の長所です。
+
+一方、情報科学の世界では「**末尾再帰（Tail Recursion）**」という、より省メモリな書き方が知られています。**関数の最後の動作が「自分自身の呼び出し」になっている再帰**のことで、Racket はこれを特別扱いし、**深い再帰でもスタックを積み上げません**（末尾呼び出し最適化 / Tail Call Optimization）。「あとで何かする（`append` でつなぐ、`* n` を掛ける）余地を残したまま自分を呼ぶ」と、その分だけ記憶域が必要になる——それが非末尾再帰との違いです。
+
+`steps` を、命令を **`cons` で先頭に積み、最後に `reverse` でひっくり返す**「アキュムレータ（溜め込み変数）方式」で書き直すと:
+
+```racket
+;; steps-acc : Number Number CommandList -> CommandList
+;; acc に描く順番と逆順で命令を積み、最後に reverse で元に戻す（末尾再帰版）
+(define (steps-acc n len acc)
+  (cond
+    [(<= n 0) (reverse acc)]
+    [else (steps-acc (sub1 n) len
+                     (cons (turn-right 90)
+                           (cons (forward len) acc)))]))
+```
+
+`append` は「リストの先頭から順にたどって末尾に連結する」ため、命令が長くなるほど1回の連結に時間がかかります。一方 `cons` は**先頭に1個くっつけるだけ**で、何回でも一定の速さ。積み上げた分は最後に `reverse` で正しい順序に戻します。
+
+> 💡 **正直な注意**: 本書のタートルは「命令リストを全部作ってから最後に描画する」設計なので、描画コストが支配的で、この差は体感しにくいかもしれません。それでも「**深い再帰でもスタックが溢れない**」という Racket の特性は、ほかの多くの言語にはない魅力です。`(draw (steps-acc 4 50 empty))` と `(draw (steps 4 50))` が同じ絵（正方形）になることを確かめてみましょう！
 
 ---
 
