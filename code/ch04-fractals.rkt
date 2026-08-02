@@ -19,7 +19,8 @@
 ;; 4.1 ツリー
 ;; ------------------------------------------------------------
 
-;; tree: 位置を往復で戻す簡易フラクタルツリー
+;; tree : Number Number Number -> CommandList
+;; 位置を往復で戻す簡易フラクタルツリー
 (define (tree depth size angle)
   (cond
     [(<= depth 0)
@@ -39,6 +40,7 @@
 ;; 4.2 コッホ
 ;; ------------------------------------------------------------
 
+;; koch-line : Number Number -> CommandList
 (define (koch-line depth size)
   (cond
     [(<= depth 0)
@@ -53,6 +55,7 @@
              (list (turn-left 60))
              (koch-line (sub1 depth) s3))]))
 
+;; koch-snowflake : Number Number -> CommandList
 (define (koch-snowflake depth size)
   (append (koch-line depth size)
           (list (turn-right 120))
@@ -64,6 +67,7 @@
 ;; 4.3 シェルピンスキー（外形の再帰三角形）
 ;; ------------------------------------------------------------
 
+;; triangle-outline : Number -> CommandList
 (define (triangle-outline size)
   (list (forward size)
         (turn-left 120)
@@ -72,6 +76,7 @@
         (forward size)
         (turn-left 120)))
 
+;; sierpinski : Number Number -> CommandList
 ;; 次の小三角形の起点へ（一辺の半分進んで向き調整は簡略）
 (define (sierpinski depth size)
   (cond
@@ -97,6 +102,7 @@
 ;; 4.4 ドラゴン
 ;; ------------------------------------------------------------
 
+;; dragon : Number Number Number -> CommandList
 (define (dragon depth size turn)
   (cond
     [(<= depth 0)

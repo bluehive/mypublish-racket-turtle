@@ -10,13 +10,13 @@
 ;; パターン A: リスト構造再帰
 ;; ------------------------------------------------------------
 
-;; list-sum: (listof number) -> number
+;; list-sum : (listof Number) -> Number
 (define (list-sum lon)
   (cond
     [(empty? lon) 0]
     [else (+ (first lon) (list-sum (rest lon)))]))
 
-;; my-length
+;; my-length : (listof Number) -> Number
 (define (my-length xs)
   (cond
     [(empty? xs) 0]
@@ -31,7 +31,8 @@
     [(zero? n) 1]
     [else (* n (factorial (sub1 n)))]))
 
-;; depth-forwards: 深さ d だけ forward 1 を並べる（教材用）
+;; depth-forwards : Number -> CommandList
+;; 深さ d だけ forward 1 を並べる（教材用）
 (define (depth-forwards d)
   (cond
     [(<= d 0) empty]
@@ -74,6 +75,40 @@
   (if (<= times 0) 0 times))
 
 ;; ------------------------------------------------------------
+;; 発展コラム: 末尾再帰とアキュムレータ（本文3.3のコラム参照）
+;; ------------------------------------------------------------
+
+;; steps : Number Number -> CommandList
+;; 残り回数 n だけ、長さ len で前進して右に90度回る（本文3.1版: append 方式）
+(define (steps n len)
+  (cond
+    [(<= n 0) empty]
+    [else (append (list (forward len) (turn-right 90))
+                  (steps (sub1 n) len))]))
+
+;; steps-acc : Number Number CommandList -> CommandList
+;; acc に描く順番と逆順で命令を積み、最後に reverse で元に戻す（末尾再帰版）
+(define (steps-acc n len acc)
+  (cond
+    [(<= n 0) (reverse acc)]
+    [else (steps-acc (sub1 n) len
+                     (cons (turn-right 90)
+                           (cons (forward len) acc)))]))
+
+;; コラムの検証用: 命令をシンボルに置き換えた純粋モデル
+;; （teachpack の命令は手続きオブジェクトのため equal? で直接比較できない）
+(define (steps-sym n)
+  (cond
+    [(<= n 0) empty]
+    [else (append (list 'forward 'turn-right)
+                  (steps-sym (sub1 n)))]))
+(define (steps-acc-sym n acc)
+  (cond
+    [(<= n 0) (reverse acc)]
+    [else (steps-acc-sym (sub1 n)
+                         (cons 'turn-right (cons 'forward acc)))]))
+
+;; ------------------------------------------------------------
 ;; tests
 ;; ------------------------------------------------------------
 
@@ -90,6 +125,10 @@
 (check-equal? (length (spiral 90 1 2)) 4) ; 2 steps * 2 cmds
 (check-true (list? (spiral2 1 1 45 3)))
 (check-equal? (length (regular-polygon-rec 10 4)) 8)
+(check-equal? (length (steps-acc 4 50 empty)) 8)     ; 末尾再帰版: 4回 × 2命令
+(check-equal? (steps-sym 4) (steps-acc-sym 4 empty)) ; 命令順が append 版と一致する
+(check-equal? (steps-sym 2) '(forward turn-right forward turn-right))
+(check-equal? (steps-acc 0 10 empty) empty)
 (printf "ch03-recursion: tests OK\n")
 
 ;; 描画（任意）
