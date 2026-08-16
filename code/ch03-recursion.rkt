@@ -42,7 +42,7 @@
 ;; ------------------------------------------------------------
 
 (define (spiral a x times)
-  (if (< times 0)
+  (if (<= times 0)
       empty
       (append (list (forward x) (turn-left a))
               (spiral a (+ x 2) (sub1 times)))))
@@ -68,10 +68,10 @@
 (define (regular-polygon-rec len n)
   (poly-rec len n n (/ 360.0 n)))
 
-;; 螺旋の forward 回数 = times+1 （times が 0 以上のとき times 回ではなく
-;; 実装は times から -1 までなので times+1 回）
+;; 螺旋の forward 回数 = times 回
+;; 実装は times から 1 まで（<= times 0 で停止）なので、times 回 forward する
 (define (spiral-forward-count times)
-  (if (< times 0) 0 (+ times 1)))
+  (if (<= times 0) 0 times))
 
 ;; ------------------------------------------------------------
 ;; tests
@@ -85,9 +85,9 @@
 (check-equal? (length (depth-forwards 0)) 0)
 (check-equal? (length (depth-forwards 4)) 4)
 (check-equal? (spiral-forward-count -1) 0)
-(check-equal? (spiral-forward-count 0) 1)
-(check-equal? (spiral-forward-count 10) 11)
-(check-equal? (length (spiral 90 1 2)) 6) ; 3 steps * 2 cmds
+(check-equal? (spiral-forward-count 0) 0)
+(check-equal? (spiral-forward-count 10) 10)
+(check-equal? (length (spiral 90 1 2)) 4) ; 2 steps * 2 cmds
 (check-true (list? (spiral2 1 1 45 3)))
 (check-equal? (length (regular-polygon-rec 10 4)) 8)
 (printf "ch03-recursion: tests OK\n")
