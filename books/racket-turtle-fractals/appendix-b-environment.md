@@ -3,7 +3,7 @@ title: "付録B　環境構築（Windows 11 と DrRacket）"
 ---
 
 > **この付録のゴール**  
-> 高校生でも、自分の PC で Beginning Student（BSL）を動かせるようにする。  
+> 自分の PC で Beginning Student（BSL）を動かせるようにする。  
 > **参照**: [howtocode installation](https://howtocode.pages.dev/installation) / [Racket ダウンロード](https://download.racket-lang.org/)  
 > **Issue**: [#環境](https://github.com/bluehive/mypublish-racket-turtle/issues/3)
 
