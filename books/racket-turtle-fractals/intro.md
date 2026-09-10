@@ -4,7 +4,7 @@ title: "序章　なぜ Racket で描くか——Scratch から広がる数学�
 
 > **この章のゴール**  
 > 自己相似形（フラクタル）とは何かをつかみ、Scratch などのビジュアル言語から Racket のテキストプログラミングへスムーズにステップアップする。DrRacket を使って式を評価できる状態になる。  
-> **想定読者**: プログラミングを楽しみたい高校生（Scratch の経験が少しある方〜初学者）  
+> **想定読者**: プログラミングを楽しみたい人（高校生〜大人。Scratch の経験が少しある方〜初学者）  
 > **言語方針 A**: 序盤 Beginning Student（`#lang htdp/bsl`）／本編描画は `#lang racket` + `teachpacks/racket-turtle`
 
 ---
