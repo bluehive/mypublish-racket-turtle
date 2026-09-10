@@ -1,10 +1,10 @@
 title: "Racket タートルグラフィックス入門"
-summary: "序盤は BSL、第2章は BSL + racket-turtle、第3章は ISL+ の繰り返し（repeat / build-list / map）で複雑なタートル図形を描く入門。今版は再帰・フラクタル・Plot・Processing を収録しない。"
+summary: "序盤は BSL、第2章は BSL + racket-turtle、第3章は ISL+ の繰り返し（repeat / build-list / map）で複雑なタートル図形を描く入門。今版は再帰・フラクタル・Processing を収録しない。"
 topics: ["Racket", "Turtle", "BSL", "ISL+", "タートルグラフィックス", "プログラミング入門"]
 published: true
 price: 0
 # 今版: 序章・第1章(BSL)・第2章(BSL+turtle)・第3章(ISL+ループ)・薄い終章 + 付録A–E
-# 未収録: 旧再帰第3章原稿・第4章フラクタル・付録F Plot（リポジトリ残置）
+# 未収録: 旧再帰第3章原稿・第4章フラクタル（リポジトリ残置）
 chapters:
   - intro
   - ch01-basics
