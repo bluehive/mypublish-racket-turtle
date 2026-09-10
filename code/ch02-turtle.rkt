@@ -6,7 +6,6 @@
 
 (require test-engine/racket-tests)
 (require teachpacks/racket-turtle)
-(require 2htdp/image)
 
 ;; ------------------------------------------------------------
 ;; Data: CommandList を組み立てる関数群
@@ -59,13 +58,6 @@
                   (change-pen-size 3))
             (list (changing-square len))))
 
-;; スタンプ付き正方形（公式 4.7 系）
-(define STAMP (circle 5 "solid" "red"))
-
-(define (stamper-square len)
-  (list (stamper-on STAMP)
-        (pen-up)
-        (changing-square len)))
 
 ;; square1 相当（展開形）
 (define square1
@@ -104,5 +96,4 @@
 ;; (draw (make-regular-polygon 50 6))
 ;; (draw (fancy-square 70))
 ;; (draw (star-5 80))
-;; (draw (stamper-square 100))
 ;; (draw (two-squares 60 40))
