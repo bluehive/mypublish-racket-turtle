@@ -3,7 +3,7 @@ title: "序章　なぜ Racket で描くか——Scratch から広がる数学�
 ---
 
 > **この章のゴール**  
-> 自己相似形（フラクタル）とは何かをつかみ、Scratch などのビジュアル言語から Racket のテキストプログラミングへスムーズにステップアップする。DrRacket を使って式を評価できる状態になる。  
+> プログラムで図形を描く楽しさをつかみ、Scratch などのビジュアル言語から Racket のテキストプログラミングへステップアップする。DrRacket で式を評価でき、続く第1–2章（BSL とタートル）への準備ができる状態になる。今版はタートルまで（フラクタル本線は次巻候補）。  
 > **想定読者**: プログラミングを楽しみたい人（高校生〜大人。Scratch の経験が少しある方〜初学者）  
 > **言語方針 A**: 序盤 Beginning Student（`#lang htdp/bsl`）／本編描画は `#lang racket` + `teachpacks/racket-turtle`
 
@@ -94,8 +94,7 @@ DrRacket には初学者が安全に学べる「言語レベル」が用意さ�
 | 段階 | 使用する言語設定 | 何を学ぶか？ |
 |---|---|---|
 | **序盤（序章〜第1章）** | `#lang htdp/bsl` (Beginning Student) | 式の計算・関数の定義・自動テスト・リストの基礎 |
-| **本編（第2章〜第4章）** | `#lang racket` + `teachpacks/racket-turtle` | カメへの命令リストを作ってフラクタルを描く |
-| **発展（終章・付録 F）** | `#lang racket` + `plot` | 数式やデータをグラフにする／画面を出さずに画像ファイルへ保存 |
+| **本編（第2章）** | `#lang racket` + `teachpacks/racket-turtle` | カメへの命令リストで基本図形を描く（今版の終点） |
 
 ※ `htdp/bsl` の **HtDP** は教科書 *How to Design Programs*、**BSL** は *Beginning Student Language*（初心者言語）の略です。
 

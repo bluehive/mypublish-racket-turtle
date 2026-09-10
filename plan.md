@@ -1,34 +1,30 @@
-# plan.md — 自己相似形グラフィック入門
+# plan.md — Racket タートルグラフィックス入門
 
-## ステータス（2026-07-25）
+## ステータス（2026-09-10・縮小方針）
 
 | 項目 | 状態 |
 |------|------|
-| 目次（章・節） | 確定（#15 コメント + README） |
-| 新リポジトリ | `bluehive/mypublish-racket-turtle` |
-| 序章・第1章 | ライフゲーム本から移植＋目次整合改定 |
-| 第2–4章 | ドラフト本文 + code（#1 #2） |
-| 終章 | 5.2 Racket Plot 発展学習追加 |
-| 付録 F | Racket Plot の基礎と Headless 出力追加 |
-| Zenn 公開 | `config.yaml` の `published: true`（初稿完了） |
-| EPUB | スクリプト移植済・要 pandoc |
+| 今版スコープ | **タートルライブラリまで**（序章・第1・第2・終章＋付録 A–E） |
+| タイトル | 『Racket タートルグラフィックス入門』 |
+| 外す（今版） | 第3章再帰・第4章フラクタル・付録 F Plot、Processing 出版 |
+| 詳細メモ | [notes/.../scope-reduction-turtle-only-2026-09-10.md](notes/racket-turtle-fractals/scope-reduction-turtle-only-2026-09-10.md) |
+| Zenn | `config.yaml` の chapters を今版構成に合わせる |
+| EPUB | スクリプト移植済・要 pandoc（章セット変更後に再確認） |
 
 ## 次の執筆タスク
 
-1. ~~第2章本文 + code~~（#1 完了）
-2. ~~第3–4章~~（#2 完了）
-3. ~~Racket Plot 機能の検討と追加原稿・コード作成~~（#3 完了）
-4. 終章・付録 C 拡充
-5. Zenn で序章のみ先行公開の検討
-6. 描画の目視校正（DrRacket で `draw`）
+1. 序章のフラクタル本線を「図形描画入門」へリライト
+2. 終章をタートル振り返り中心へ短縮
+3. 第1章・付録 C の前方参照（第3–4章）整理
+4. 未収録ファイルの退避／削除判断
+5. ディレクトリ名 `racket-turtle-fractals` の改名検討
 
 ## 言語方針
 
 **A**: 序盤 BSL / 本編 `#lang racket` + `teachpacks/racket-turtle`（付録 E）  
-発展: `plot`（付録 F）
+今版に Plot（付録 F）は含めない。
 
-## 参照 Issue
+## 参照
 
-- https://github.com/bluehive/mypublish-racket-turtle/issues/3
+- 縮小メモ: `notes/racket-turtle-fractals/scope-reduction-turtle-only-2026-09-10.md`
 - https://github.com/bluehive/draft-publish-books-2026/issues/15
-- https://github.com/bluehive/my-grok-task-2026/issues/40

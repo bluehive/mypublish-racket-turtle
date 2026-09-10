@@ -1,6 +1,6 @@
 # mypublish-racket-turtle
 
-**『自己相似形グラフィック入門』**（副題: Racket タートルで学ぶフラクタルと再帰）の執筆リポジトリ。
+**『Racket タートルグラフィックス入門』**（副題: 式・関数・カメで図形を描く）の執筆リポジトリ。今版は **タートルライブラリまで**。再帰・フラクタル・Plot・Processing は収録しない。
 
 - **コード・執筆**: [Grok 4.5](https://x.ai) 協業
 - **公開**: [Zenn](https://zenn.dev) 本 → 最終確認後に EPUB / Kindle
@@ -25,14 +25,16 @@
 **目次の正本は本 README と `books/racket-turtle-fractals/`。**  
 章本文の正本は `books/racket-turtle-fractals/`。
 
+> **今版の範囲**: 序章 → 第1章 → 第2章（`racket-turtle`）→ 終章 ＋ 付録 A–E。  
+> 第3章再帰・第4章フラクタル・付録 F Plot はリポジトリに残すが **今版の出版目次外**（次巻候補）。Processing は今回出版しない。
+
 ### 序章　なぜ Racket で描くか
 
 - 原稿: [intro.md](books/racket-turtle-fractals/intro.md)
-- 0.1 自己相似形とは（フラクタル入門）
+- 0.1 図形をプログラムで描く楽しさ（旧: 自己相似／フラクタル導入 → 後続でリライト）
 - 0.2 なぜ Racket か——構文より論理
 - 0.3 DrRacket と BSL／言語レベルの見取り図
-- 0.4 本書の進め方（1週間レッスンプラン）
-- 各節末メモ: 三角ロジックで整理予定
+- 0.4 本書の進め方
 
 ### 第1章　Racket の基礎——式と関数
 
@@ -42,56 +44,37 @@
 - 1.2 定数と関数、`check-expect`
 - 1.3 条件分岐（`if` / `cond`）
 - 1.4 リストのさわり（コマンド列の下準備）
-- 各節末メモ: 三角ロジックで整理予定
 
-### 第2章　タートルグラフィックス入門（レッスン1–2日目）
+### 第2章　タートルグラフィックス入門（今版のゴール）
 
 - 原稿: [ch02-turtle.md](books/racket-turtle-fractals/ch02-turtle.md)
 - コード: [ch02-turtle.rkt](code/ch02-turtle.rkt)（`#lang racket` + racket-turtle）
-- 状態: ドラフト（howtocode データ駆動・CommandList / #1）
-- 2.0 データ駆動の約束
-- 2.1 `racket-turtle` の考え方
+- 2.0 タートルグラフィックスの歴史
+- 2.1 `racket-turtle` の基本操作
 - 2.2 正方形・三角形・多角形
 - 2.3 色・ペン・スタンプ
 - 2.4 関数で図形を再利用
 
-### 第3章　再帰への橋渡し（レッスン3日目）
-
-- 原稿: [ch03-recursion.md](books/racket-turtle-fractals/ch03-recursion.md)
-- コード: [ch03-recursion.rkt](code/ch03-recursion.rkt)
-- 状態: ドラフト（テンプレート駆動・#2）
-- 3.0 なぜ再帰か
-- 3.1 繰り返す図形から再帰へ
-- 3.2 再帰の型紙（リスト／深さ）
-- 3.3 タートルと再帰の組み合わせパターン
-
-### 第4章　フラクタルを描く（レッスン4–6日目）
-
-- 原稿: [ch04-fractals.md](books/racket-turtle-fractals/ch04-fractals.md)
-- コード: [ch04-fractals.rkt](code/ch04-fractals.rkt)
-- 状態: ドラフト（Depth テンプレ・#2）
-- 4.0 共通データと共通テンプレート
-- 4.1 フラクタルツリー
-- 4.2 コッホ曲線・コッホ雪片
-- 4.3 シェルピンスキーの三角形
-- 4.4 ドラゴン曲線と発展図形
-
-### 終章　高校数学の学びは大人でも楽しい（レッスン7日目）
+### 終章　振り返りと次の一歩
 
 - 原稿: [closing.md](books/racket-turtle-fractals/closing.md)
-- 5.1 フラクタルと現実世界
-- 5.2 次の一歩
-- 各節末メモ: 三角ロジックで整理予定
+- タートルまでの学びの整理、次巻（再帰・フラクタル）や他教材への案内（本文は後続で短縮予定）
 
-### 1週間レッスンプラン
+### 未収録（リポジトリ残置・次巻候補）
 
-| 日 | 章 |
-|----|-----|
-| 事前〜1 | 序章・第1章 |
-| 1–2 | 第2章 |
-| 3 | 第3章 |
-| 4–6 | 第4章 |
-| 7 | 終章 |
+| 章 | 原稿 | 備考 |
+|----|------|------|
+| 第3章 再帰 | [ch03-recursion.md](books/racket-turtle-fractals/ch03-recursion.md) | 今版 TOC 外 |
+| 第4章 フラクタル | [ch04-fractals.md](books/racket-turtle-fractals/ch04-fractals.md) | 今版 TOC 外 |
+| 付録 F Plot | [appendix-f-plot.md](books/racket-turtle-fractals/appendix-f-plot.md) | 今版 TOC 外 |
+
+### 学習の目安（短縮版）
+
+| 段階 | 章 |
+|------|-----|
+| 準備 | 序章・第1章 |
+| 本編 | 第2章（タートル） |
+| まとめ | 終章 |
 
 ## 付録
 
@@ -102,15 +85,16 @@
 | C | 復習と例題集 | [appendix-c-exercises.md](books/racket-turtle-fractals/appendix-c-exercises.md) |
 | D | 参考文献 | [appendix-d-references.md](books/racket-turtle-fractals/appendix-d-references.md) |
 | E | BSL と `#lang racket` の使い分け | [appendix-e-lang-policy.md](books/racket-turtle-fractals/appendix-e-lang-policy.md) |
-| F | Racket Plot の基礎と Headless 画像生成 | [appendix-f-plot.md](books/racket-turtle-fractals/appendix-f-plot.md) |
 
 ## 言語方針 A
 
 | 段階 | 言語 | 用途 |
 |------|------|------|
 | 序盤（〜第1章） | `#lang htdp/bsl` | 式・関数・テスト |
-| 本編（第2章〜） | `#lang racket` + `teachpacks/racket-turtle` | タートル描画 |
+| 本編（第2章） | `#lang racket` + `teachpacks/racket-turtle` | タートル描画（今版の終点） |
 | 詳細 | 付録 E | |
+
+今版に Plot／Processing は含めない。
 
 ## フォルダ構成
 
