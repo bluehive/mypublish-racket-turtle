@@ -21,4 +21,3 @@ title: "付録D　参考文献・オンラインリソース"
 - Google Drive の Python 時代 PDF（参考・歴史資料）  
 - 旧ドラフト: `draft-publish-books-2026` の `self-similar-graphics.md`（本リポジトリへ移行済み）
 
-> 三角ロジックで整理予定
