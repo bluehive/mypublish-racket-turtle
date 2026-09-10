@@ -95,7 +95,6 @@
 | B | 環境構築 | [appendix-b-environment.md](books/racket-turtle-fractals/appendix-b-environment.md) |
 | C | 復習と例題集 | [appendix-c-exercises.md](books/racket-turtle-fractals/appendix-c-exercises.md) |
 | D | 参考文献 | [appendix-d-references.md](books/racket-turtle-fractals/appendix-d-references.md) |
-| E | BSL / ISL / turtle の使い分け | [appendix-e-lang-policy.md](books/racket-turtle-fractals/appendix-e-lang-policy.md) |
 
 ## 言語方針 A（今版）
 
@@ -104,7 +103,6 @@
 | 第1章 | `#lang htdp/bsl` | 式・関数・テスト |
 | 第2章 | `#lang htdp/bsl` + `teachpacks/racket-turtle` | 基本タートル図形 |
 | 第3章 | `#lang htdp/isl` + `teachpacks/racket-turtle` | ループ（`repeat` / `build-list` / `map`）で複雑図形 |
-| 詳細 | 付録 E | |
 
 今版に Processing／明示的再帰／フラクタル本線は含めない。
 
