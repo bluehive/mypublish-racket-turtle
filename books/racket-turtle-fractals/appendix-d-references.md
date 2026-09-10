@@ -13,7 +13,3 @@ title: "付録D　参考文献・オンラインリソース"
 
 - 本リポジトリ: https://github.com/bluehive/mypublish-racket-turtle  
 - 姉妹編 ライフゲーム: https://github.com/bluehive/mypublish-gameoflife  
-#### D.3 その他
-
-- Google Drive の Python 時代 PDF（参考・歴史資料）  
-

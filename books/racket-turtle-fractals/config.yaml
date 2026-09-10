@@ -3,7 +3,7 @@ summary: "序盤は BSL、第2章は BSL + racket-turtle、第3章は ISL の繰
 topics: ["Racket", "Turtle", "BSL", "ISL", "タートルグラフィックス", "プログラミング入門"]
 published: true
 price: 0
-# 今版: 序章・第1章(BSL)・第2章(BSL+turtle)・第3章(ISLループ)・薄い終章 + 付録A–E
+# 今版: 序章・第1章(BSL)・第2章(BSL+turtle)・第3章(ISLループ)・終章 + 付録A–D
 # 未収録: 第4章フラクタル（リポジトリ残置）。旧再帰第3章は drafts/ へ
 chapters:
   - intro
@@ -15,6 +15,5 @@ chapters:
   - appendix-b-environment
   - appendix-c-exercises
   - appendix-d-references
-  - appendix-e-lang-policy
 
 toc_depth: 2
