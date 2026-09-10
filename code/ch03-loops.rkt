@@ -1,13 +1,14 @@
 ;; Racket タートルグラフィックス入門 — 第3章 ループで複雑な図形（ISL）
 ;; 実行: DrRacket で開くか `racket code/ch03-loops.rkt`
-;; 描画: (draw …) のコメントを外す（要: raco pkg install teachpacks）
+;; 描画: 末尾の (draw …) のコメントを外す（要: raco pkg install teachpacks）
+;; 言語: Intermediate Student（#lang htdp/isl）。ISL+（lambda）ではない。
 
 #lang htdp/isl
 
 (require teachpacks/racket-turtle)
 
 ;; ------------------------------------------------------------
-;; 3.2 おさらい: turtle の repeat
+;; 3.3 おさらい: turtle の repeat
 ;; ------------------------------------------------------------
 
 ;; side: Number Number -> CommandList
@@ -20,10 +21,10 @@
   (repeat n (side len (/ 360 n))))
 
 ;; ------------------------------------------------------------
-;; 3.3 build-list で「変化する」命令列をまとめて作る
+;; 3.4 build-list で「変化する」命令列をまとめて作る
 ;; ------------------------------------------------------------
-;; 注意: build-list / map が「命令のリスト」を返すと二重リストになる。
-;; foldr append empty で平坦な CommandList にする。
+;; growing-step は「小さな CommandList」を返す。
+;; build-list すると二重リストになるので、foldr append empty で平らにする。
 ;; ISL には lambda が無いので、ステップ関数はすべて define で名前を付ける。
 
 ;; growing-step: Integer -> CommandList
@@ -37,7 +38,7 @@
   (foldr append empty (build-list n growing-step)))
 
 ;; ------------------------------------------------------------
-;; 3.4 螺旋（ループ版）— 長さが少しずつ伸びる
+;; 3.5 螺旋（ループ版）— 長さが少しずつ伸びる
 ;; ------------------------------------------------------------
 ;; 回転角 a を変えたいときは、角度ごとに名前付きステップを用意する。
 ;; （ISL+ なら lambda で閉じ込められるが、今版は ISL）
@@ -62,7 +63,7 @@
   (foldr append empty (build-list times spiral-step-91)))
 
 ;; ------------------------------------------------------------
-;; 3.5 色を変えながら／ずらして並べる（map + flatten）
+;; 3.6 色を変えながら／ずらして並べる（map + flatten）
 ;; ------------------------------------------------------------
 
 (define COLORS (list "red" "orange" "gold" "green" "blue" "purple"))
@@ -101,11 +102,22 @@
   (foldr append empty (build-list count square-at-index)))
 
 ;; ------------------------------------------------------------
-;; 描画（任意）— コメントを外して DrRacket で
+;; 描画（任意）— コメントを外して DrRacket で試す
 ;; ------------------------------------------------------------
+;; 例: 正六角形
 ;; (draw (make-regular-polygon 60 6))
+
+;; 例: 長さが伸びながら曲がる
 ;; (draw (growing-steps 8))
+
+;; 例: 90 度螺旋
 ;; (draw (spiral-loop-90 30))
+
+;; 例: 91 度螺旋（背景黒）
 ;; (draw (list (change-bg-color "black") (spiral-loop-91 40)))
+
+;; 例: 正方形を横に並べる
 ;; (draw (row-of-squares 5))
+
+;; 例: 色を変えながら正六角形
 ;; (draw (rainbow-hexagons))
