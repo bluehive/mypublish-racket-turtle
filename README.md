@@ -56,12 +56,15 @@
 
 ### 第3章　ループで複雑な図形（ISL+ + turtle）
 
-- 原稿: 現状ファイル名は [ch03-recursion.md](books/racket-turtle-fractals/ch03-recursion.md)（**内容はループ版へ全面書換予定**。旧・再帰稿は drafts へ）
-- コード: 新 `code/ch03-*.rkt`（`#lang htdp/isl+`）を後続で追加
-- 3.1 タートルの `repeat`
-- 3.2 `build-list` / `map` で命令列をまとめて作る
-- 3.3 リストの平坦化（二重リストに注意）と幾何模様
-- ※ ISL+ に `for` は無い。本章の「ループ」＝ `repeat` と高階関数による反復生成
+- 原稿: [ch03-loops.md](books/racket-turtle-fractals/ch03-loops.md)
+- コード: [ch03-loops.rkt](code/ch03-loops.rkt)（`#lang htdp/isl+` + turtle）
+- 3.0 なぜループか
+- 3.1 ISL+ への切り替え
+- 3.2 `repeat` のおさらい
+- 3.3 `build-list` と平坦化
+- 3.4 螺旋（ループ版）
+- 3.5 `map` で色・部品
+- ※ ISL+ に `for` は無い。本章の「ループ」＝ `repeat` と高階関数による反復生成。旧・再帰稿は `drafts/` へ退避
 
 ### 終章　振り返り（薄い）
 
@@ -72,7 +75,7 @@
 
 | 内容 | 原稿 | 備考 |
 |------|------|------|
-| 旧・再帰第3章 | （書換前の ch03） | drafts 予定 |
+| 旧・再帰第3章 | [`drafts/racket-turtle-fractals/`](drafts/racket-turtle-fractals/) | 退避済み |
 | 第4章 フラクタル | [ch04-fractals.md](books/racket-turtle-fractals/ch04-fractals.md) | 今版外 |
 
 ### 学習の目安
