@@ -3,9 +3,9 @@ title: "第3章　ループで複雑な図形——repeat とリスト生成"
 ---
 
 > **この章のゴール**  
-> 言語を Intermediate Student with lambda（`#lang htdp/isl+`）に切り替え、タートルの `repeat` と `build-list` / `map` / `foldr` で命令列をまとめて作り、変化する図形や並びを描けるようになる。**明示的な再帰は使わない。**  
+> 言語を Intermediate Student（`#lang htdp/isl`）に切り替え、タートルの `repeat` と `build-list` / `map` / `foldr` で命令列をまとめて作り、変化する図形や並びを描けるようになる。**明示的な再帰は使わない。** `lambda` も使わない（名前付きの関数で渡す）。  
 > **想定読者**: プログラミングを楽しみたい人  
-> **言語方針 A（今版）**: `#lang htdp/isl+` + `(require teachpacks/racket-turtle)`  
+> **言語方針 A（今版）**: `#lang htdp/isl` + `(require teachpacks/racket-turtle)`  
 > **付属コード**: `code/ch03-loops.rkt`
 
 ---
@@ -22,7 +22,7 @@ title: "第3章　ループで複雑な図形——repeat とリスト生成"
 
 手で `(forward …) (turn-left …)` を何十行も書くのはつらいので、**規則だけ書いてコンピュータに命令列を生成させる**のがこの章のテーマです。
 
-本書の「ループ」は、一般の言語の `for` 文ではありません（ISL+ に `for` はありません）。次の道具を指します。
+本書の「ループ」は、一般の言語の `for` 文ではありません（ISL にも `for` はありません）。次の道具を指します。
 
 1. タートルの `(repeat k cmd-list)` — 同じ命令セットを k 回  
 2. `(build-list n f)` / `map` — 番号や色ごとに命令のかたまりを作る  
@@ -30,24 +30,97 @@ title: "第3章　ループで複雑な図形——repeat とリスト生成"
 
 ---
 
-#### 3.1 言語を ISL+ に切り替える
+#### 3.1 第2章の BSL と、この章の ISL はどう違うか
+
+第1–2章は Beginning Student（`#lang htdp/bsl`）でした。第3章だけ Intermediate Student（`#lang htdp/isl`）に上げます。ここで「何が増えて、何はまだ無いか」を丁寧に押さえておきましょう。
+
+##### 🎓 言語レベルの位置づけ（ざっくり）
+
+| レベル | `#lang` | この本での役割 |
+|---|---|---|
+| Beginning Student | `htdp/bsl` | 第1–2章。式・関数・`list`・turtle の基本 |
+| Beginning Student with List Abbreviations | `htdp/bsl+` | リストの略記が增える程度。**この章のループには足りない** |
+| Intermediate Student | `htdp/isl` | **第3章（今版）**。`map` / `build-list` / `foldr` など |
+| Intermediate Student with lambda | `htdp/isl+` | `lambda` が使える。今版の第3章では使わない |
+
+##### ✅ BSL のままできること（第2章まで）
+
+- 名前付きの関数を `define` する  
+- `list` / `first` / `rest` / `empty?` / `append`  
+- 条件分岐 `cond` / `if`  
+- タートルの `(forward …)` や **`(repeat k cmd-list)`**  
+
+つまり「同じ動きをそのまま回数分くり返す」は、すでに BSL + turtle で書けます。
+
+##### 🆕 ISL で新しく使えること（この章の本体）
+
+- **`build-list`**: `0` … `n-1` のそれぞれについて、関数を当てた結果のリストを作る  
+- **`map`**: すでにあるリストの各要素に、同じ変換を当てる  
+- **`foldr` / `foldl`**: リストを右（または左）からたたみ込む。ここでは **`foldr append empty` で平坦化**に使う  
+
+これで「i 番目だけ長さを変える」「色のリストの分だけ図形を増やす」といった **変化するくり返し** が書けます。
+
+##### ⚠️ ISL でもまだ無いもの（混乱しやすい点）
+
+- **`lambda`（無名関数）は ISL にはありません。**  
+  `map` や `build-list` に渡す関数は、必ず先に `(define (名前 …) …)` で名前を付けます。  
+  （`lambda` が使えるのは ISL+ です。今版の第3章は ISL に揃えます。）
+- **`for` 文もありません。** 「ループ」＝上の表の道具、と読み替えてください。
+- **明示的な再帰**（関数が自分を呼ぶ）は、今版の第3章では扱いません。
+
+##### 🔁 同じ意図を BSL と ISL で見比べる
+
+**BSL（第2章）**: 同じ辺を `repeat` するだけならこれで十分です。
+
+```racket
+#lang htdp/bsl
+(require teachpacks/racket-turtle)
+
+(define (side len)
+  (list (forward len) (turn-left 90)))
+
+(define (square len)
+  (repeat 4 (side len)))
+```
+
+**ISL（第3章）**: 「回数ごとに長さを変えたい」ときは `build-list` で命令列を生成します。
+
+```racket
+#lang htdp/isl
+(require teachpacks/racket-turtle)
+
+(define (growing-step i)
+  (list (forward (+ 10 (* i 5)))
+        (turn-left 90)))
+
+(define (growing-steps n)
+  (foldr append empty (build-list n growing-step)))
+```
+
+ポイントは次の2つです。
+
+1. `growing-step` を **名前付き** で定義している（`lambda` を使っていない）  
+2. `build-list` の結果が二重リストになりうるので、`foldr append empty` で平坦化している  
+
+---
+
+#### 3.2 言語を ISL に切り替える
 
 第3章のファイル先頭は次のようにします。
 
 ```racket
-#lang htdp/isl+
+#lang htdp/isl
 (require teachpacks/racket-turtle)
 ```
 
-DrRacket では言語レベルを **Intermediate Student with lambda** に合わせます（`#lang` とメニューを食い違わせない）。
-
-ISL+ では `lambda`（その場限りの小さな関数）や `build-list` / `map` / `foldr` が使えます。第2章の BSL より表現力は上がりますが、やることは「命令リストを組み立てて `(draw …)`」のままです。
+DrRacket では言語レベルを **Intermediate Student** に合わせます（`#lang` とメニューを食い違わせない）。  
+※ 「Intermediate Student with lambda」ではないので注意してください。
 
 ---
 
-#### 3.2 おさらい: `repeat` で正多角形
+#### 3.3 おさらい: `repeat` で正多角形
 
-第2章と同じ型紙を、ISL+ でも使えます。
+第2章と同じ型紙を、ISL でも使えます。
 
 ```racket
 (define (side len exterior-deg)
@@ -65,11 +138,11 @@ ISL+ では `lambda`（その場限りの小さな関数）や `build-list` / `m
 
 ---
 
-#### 3.3 `build-list` で変化する命令列を作る
+#### 3.4 `build-list` で変化する命令列を作る
 
-`(build-list n f)` は、`0` から `n-1` までの整数 `i` について `(f i)` を並べたリストを返します。
+`(build-list n f)` は、`0` から `n-1` までの整数 `i` について `(f i)` を並べたリストを返します。ここで `f` は **あらかじめ define した関数** です。
 
-ここで罠があります。`(f i)` が「命令のリスト」（例: `(list (forward …) (turn-left …))`）だと、結果は **リストのリスト（二重リスト）** になります。`draw` が欲しいのは平坦な CommandList なので、次の型紙でつぶします。
+罠: `(f i)` が「命令のリスト」だと、結果は **リストのリスト（二重リスト）** になります。`draw` が欲しいのは平坦な CommandList なので、次の型紙でつぶします。
 
 ```racket
 (foldr append empty 二重リスト)
@@ -78,7 +151,6 @@ ISL+ では `lambda`（その場限りの小さな関数）や `build-list` / `m
 ##### 例: 長さが伸びながら曲がる
 
 ```racket
-;; i 回目: 長さ (10 + 5*i) 進んで 90 度左へ
 (define (growing-step i)
   (list (forward (+ 10 (* i 5)))
         (turn-left 90)))
@@ -97,31 +169,30 @@ ISL+ では `lambda`（その場限りの小さな関数）や `build-list` / `m
 
 ---
 
-#### 3.4 螺旋（ループ版）
+#### 3.5 螺旋（ループ版）
 
-第2章の「同じ外角で回る」に、**長さだけ少しずつ伸ばす**と螺旋っぽくなります。回転角 `a` を閉じ込めるために、`lambda` でステップ関数を作ります。
+長さだけ少しずつ伸ばすと螺旋っぽくなります。回転角ごとに **ステップ関数を名前付きで** 用意します。
 
 ```racket
-(define (make-spiral-step a)
-  (lambda (i)
-    (list (forward (+ 5 (* i 2)))
-          (turn-left a))))
+(define (spiral-step-90 i)
+  (list (forward (+ 5 (* i 2)))
+        (turn-left 90)))
 
-(define (spiral-loop a times)
-  (foldr append empty (build-list times (make-spiral-step a))))
+(define (spiral-loop-90 times)
+  (foldr append empty (build-list times spiral-step-90)))
 
-;; (draw (spiral-loop 90 30))
-;; (draw (list (change-bg-color "black") (spiral-loop 91 40)))
+;; (draw (spiral-loop-90 30))
+;; 91 度版は付属コードの spiral-loop-91 を参照
 ```
 
 - `times` がステップ数（`forward` の回数）です。  
-- 明示的に「自分を呼ぶ」再帰は書いていません。繰り返しの骨組みは `build-list` に任せ、こちらは「i 番目に何をするか」だけ定義します。
+- 明示的に「自分を呼ぶ」再帰は書いていません。
 
 ---
 
-#### 3.5 `map` で色や部品を割り当てる
+#### 3.6 `map` で色や部品を割り当てる
 
-`map` は「リストの各要素に同じ変換を当てる」関数です。色のリストに対して「その色で多角形を描く命令列」を作ると、また二重リストになるので、同じく `foldr append empty` します。
+`map` は「リストの各要素に同じ変換を当てる」関数です。渡す変換も **名前付き** にします。
 
 ```racket
 (define COLORS (list "red" "orange" "gold" "green" "blue" "purple"))
@@ -130,40 +201,42 @@ ISL+ では `lambda`（その場限りの小さな関数）や `build-list` / `m
   (append (list (change-color color))
           (make-regular-polygon len n)))
 
-(define (rainbow-polygons len n)
-  (foldr append empty
-         (map (lambda (c) (colored-poly c len n))
-              COLORS)))
+;; map 用に、色だけを引数にする1引数関数
+(define (colored-poly-60-6 color)
+  (colored-poly color 60 6))
+
+(define (rainbow-hexagons)
+  (foldr append empty (map colored-poly-60-6 COLORS)))
 ```
 
-位置をずらして並べる例は、付属コードの `row-of-squares`（`pen-up` で移動してから正方形）を見てみてください。
+横にずらして正方形を並べる例は、付属コードの `row-of-squares` / `square-at-index` を見てみてください。
 
 ```racket
-;; (draw (row-of-squares 40 5 50))
+;; (draw (row-of-squares 5))
 ```
 
 ---
 
-#### 3.6 型紙まとめ（この章で覚えること）
+#### 3.7 型紙まとめ（この章で覚えること）
 
 | やりたいこと | 使う道具 |
 |---|---|
-| 全く同じ命令を k 回 | `(repeat k cmd-list)` |
-| i 番目ごとに中身を変えたい | `(build-list n f)` または `map` |
+| 全く同じ命令を k 回 | `(repeat k cmd-list)`（BSL でも可） |
+| i 番目ごとに中身を変えたい | `(build-list n 名前付き関数)` または `map`（ISL） |
 | 命令のかたまりが入れ子になった | `(foldr append empty …)` で平坦化 |
-| その場限りの小さな関数 | `lambda` |
+| 変換関数 | 必ず `define` で名前を付ける（`lambda` は使わない） |
 
-**再帰（関数が自分を呼ぶ）は今版の第3章では使いません。** 変化や繰り返しは、上のループ型紙で表現します。
+**再帰（関数が自分を呼ぶ）は今版の第3章では使いません。**
 
 ---
 
-#### 3.7 付属コードの実行
+#### 3.8 付属コードの実行
 
 ```bash
 # 定義の読み込み確認（画面は出ません）
 racket code/ch03-loops.rkt
 ```
 
-DrRacket で `code/ch03-loops.rkt` を開き、末尾の `(draw …)` のコメントを外して **Run** してみましょう。
+DrRacket で `code/ch03-loops.rkt` を開き、言語を **Intermediate Student** にし、末尾の `(draw …)` のコメントを外して **Run** してみましょう。
 
 **次章へ**: 今版の本編はここまでです。終章で短く振り返ります。

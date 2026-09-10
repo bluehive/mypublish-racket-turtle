@@ -17,9 +17,9 @@ title: "付録C　復習と例題集"
 - `decorate` で背景黒・線シアンの六角形を作る  
 - ★ `make-regular-polygon` と同じ図形を、`repeat` を使わず `list` を手で並べて書いてみる（長さが増える感覚を確かめる）
 
-#### C.3 第3章（ISL+・ループ）
+#### C.3 第3章（ISL・ループ）
 
-- `spiral-loop` で `times` を変えて、巻きの密度がどう変わるか観察する  
+- `spiral-loop-90` で `times` を変えて、巻きの密度がどう変わるか観察する  
 - `growing-steps` の長さの式（`(+ 10 (* i 5))`）を変えてみる  
 - ★ `row-of-squares` を参考に、円（正多角形の n を大きく）を横に並べる関数を自分で書く  
 - ★ `build-list` の結果が二重リストになる例を REPL で確認し、`foldr append empty` 前後の形を見比べる  
