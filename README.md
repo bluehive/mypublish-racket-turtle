@@ -1,13 +1,12 @@
 # mypublish-racket-turtle
 
-**『Racket タートルグラフィックス入門』**（副題: 式・関数・カメで図形を描く）の執筆リポジトリ。今版は **BSL タートル → ISL+ ループ図形** まで。明示的再帰・フラクタル・Plot・Processing は収録しない。
+**『Racket タートルグラフィックス入門』**（副題: 式・関数・カメで図形を描く）の執筆リポジトリ。今版は **BSL タートル → ISL+ ループ図形** まで。明示的再帰・フラクタル・Processing は対象外。
 
 - **コード・執筆**: [Grok 4.5](https://x.ai) 協業
 - **公開**: [Zenn](https://zenn.dev) 本 → 最終確認後に EPUB / Kindle
 - **教材スタイル参照**: [howtocode.pages.dev](https://howtocode.pages.dev/)
 - **作業計画**: [plan.md](./plan.md)
 - **ライセンス**: [MIT](./LICENSE)
-- **起票**: [draft-publish-books-2026#15](https://github.com/bluehive/draft-publish-books-2026/issues/15)
 
 ## この README の目次
 
@@ -26,7 +25,7 @@
 章本文の正本は `books/racket-turtle-fractals/`。
 
 > **今版の範囲**: 序章 → 第1章（BSL）→ 第2章（BSL + turtle）→ 第3章（ISL+・ループで複雑図形）→ 薄い終章 ＋ 付録 A–E。  
-> **今版外**: 明示的再帰・フラクタル本線・Plot・Processing。  
+> **今版外**: 明示的再帰・フラクタル本線・Processing。  
 > 詳細: [縮小メモ](notes/racket-turtle-fractals/scope-reduction-turtle-only-2026-09-10.md)
 
 ### 序章　なぜ Racket で描くか
@@ -57,7 +56,7 @@
 
 ### 第3章　ループで複雑な図形（ISL+ + turtle）
 
-- 原稿: 現状ファイル名は [ch03-recursion.md](books/racket-turtle-fractals/ch03-recursion.md)（**内容は後続 PR でループ版へ全面書換**。旧・再帰稿は drafts へ）
+- 原稿: 現状ファイル名は [ch03-recursion.md](books/racket-turtle-fractals/ch03-recursion.md)（**内容はループ版へ全面書換予定**。旧・再帰稿は drafts へ）
 - コード: 新 `code/ch03-*.rkt`（`#lang htdp/isl+`）を後続で追加
 - 3.1 タートルの `repeat`
 - 3.2 `build-list` / `map` で命令列をまとめて作る
@@ -75,7 +74,6 @@
 |------|------|------|
 | 旧・再帰第3章 | （書換前の ch03） | drafts 予定 |
 | 第4章 フラクタル | [ch04-fractals.md](books/racket-turtle-fractals/ch04-fractals.md) | 今版外 |
-| 付録 F Plot | [appendix-f-plot.md](books/racket-turtle-fractals/appendix-f-plot.md) | 今版外 |
 
 ### 学習の目安
 
@@ -105,7 +103,7 @@
 | 第3章 | `#lang htdp/isl+` + `teachpacks/racket-turtle` | ループ（`repeat` / `build-list` / `map`）で複雑図形 |
 | 詳細 | 付録 E | |
 
-今版に Plot／Processing／明示的再帰／フラクタル本線は含めない。
+今版に Processing／明示的再帰／フラクタル本線は含めない。
 
 ## フォルダ構成
 
@@ -164,10 +162,7 @@ npm install
 
 ## 移行元・関連
 
-- 旧目次ドラフト: `draft-publish-books-2026` の `self-similar-graphics.md`（#15 で本リポジトリへ移行）
-- タートル調査: [my-grok-task-2026#40](https://github.com/bluehive/my-grok-task-2026/issues/40)
 - 姉妹編: [mypublish-gameoflife](https://github.com/bluehive/mypublish-gameoflife)
 
 ---
 
-*初期コミット: 2026-07-25 / draft-publish-books-2026#15*
