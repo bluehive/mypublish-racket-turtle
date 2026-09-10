@@ -1,25 +1,32 @@
 ---
-title: "付録E　BSL と #lang racket の使い分け（方針 A）"
+title: "付録E　BSL と ISL+ の使い分け（方針 A・今版）"
 ---
 
 > **この付録のゴール**  
-> なぜ序盤だけ BSL で、タートル本編を `#lang racket` にするかを一文で説明できるようにする。
+> なぜ第1–2章は BSL、第3章は ISL+ なのかを一文で説明できるようにする。
 
-#### E.1 方針 A の要約
+#### E.1 方針 A（今版）の要約
 
 | 段階 | 言語 | 理由 |
 |------|------|------|
-| 基礎 | `#lang htdp/bsl` | 構文を絞り、`check-expect` とデザインレシピで論理を先に学ぶ |
-| 描画本編 | `#lang racket` + `teachpacks/racket-turtle` | 公式 turtle teachpack の API・リスト・再帰例をそのまま使える |
-| 発展（任意） | ISL+ / `2htdp/image` / `big-bang` | アニメーションや別スタイルの図形構築 |
+| 第1章 | `#lang htdp/bsl` | 構文を絞り、`check-expect` で論理を先に学ぶ |
+| 第2章 | `#lang htdp/bsl` + `teachpacks/racket-turtle` | 同じ BSL のままカメの基本図形へ進む（teachpack 利用可を確認済み） |
+| 第3章 | `#lang htdp/isl+` + turtle | `lambda`・`build-list`・`map`・`foldr` で命令列をまとめて作り、複雑な図形へ。**明示的再帰は今版では扱わない** |
 
-#### E.2 BSL だけで押し切れない点（検討メモ）
+#### E.2 「ループ」とは（今版の定義）
 
-- BSL はリスト操作・高階・一部構文が制限される  
-- `racket-turtle` は `(require teachpacks/racket-turtle)` 前提で、公式例は Racket 系  
-- 姉妹編ライフゲームも「本線 BSL、描画発展は別系統」と分離している  
+ISL+ に `for` はありません。本書の「ループ」は次を指します。
 
-#### E.3 読者への案内文（本文転用可）
+- タートルの `(repeat k cmd-list)`
+- `(build-list n f)` / `map` などで命令をたくさん作り、必要なら `foldr append empty` で **平坦な CommandList** にする
 
-> 第1章までは Beginning Student で式と関数に慣れます。第2章からカメを動かすときは、ファイル先頭を `#lang racket` に切り替え、teachpack を入れます。考え方（例を先に、再帰の型紙）は共通です。
+再帰（関数が自分を呼ぶ）は次巻候補です。
 
+#### E.3 今版に含めないもの
+
+- フラクタル本線、Racket Plot、Processing 出版
+- 第2章コードの BSL 化・第3章ループ本文は後続 PR
+
+#### E.4 読者への案内文（本文転用可）
+
+> 第1章と第2章は Beginning Student（BSL）です。第3章だけ Intermediate Student with lambda（ISL+）に切り替え、繰り返しの仕組みで模様を増やします。

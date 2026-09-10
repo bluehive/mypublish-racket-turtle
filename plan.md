@@ -1,30 +1,29 @@
 # plan.md — Racket タートルグラフィックス入門
 
-## ステータス（2026-09-10・縮小方針）
+## ステータス（2026-09-10・改訂）
 
 | 項目 | 状態 |
 |------|------|
-| 今版スコープ | **タートルライブラリまで**（序章・第1・第2・終章＋付録 A–E） |
 | タイトル | 『Racket タートルグラフィックス入門』 |
-| 外す（今版） | 第3章再帰・第4章フラクタル・付録 F Plot、Processing 出版 |
-| 詳細メモ | [notes/.../scope-reduction-turtle-only-2026-09-10.md](notes/racket-turtle-fractals/scope-reduction-turtle-only-2026-09-10.md) |
-| Zenn | `config.yaml` の chapters を今版構成に合わせる |
-| EPUB | スクリプト移植済・要 pandoc（章セット変更後に再確認） |
+| 第1章 | `#lang htdp/bsl` |
+| 第2章 | `#lang htdp/bsl` + `teachpacks/racket-turtle` |
+| 第3章 | `#lang htdp/isl+` + turtle。**再帰ではなくループ**（`repeat` / `build-list` / `map`） |
+| 終章 | 薄い |
+| 今版外 | フラクタル本線・Plot・Processing・明示的再帰 |
+| 詳細メモ | [scope-reduction-turtle-only-2026-09-10.md](notes/racket-turtle-fractals/scope-reduction-turtle-only-2026-09-10.md) |
 
 ## 次の執筆タスク
 
-1. 序章のフラクタル本線を「図形描画入門」へリライト
-2. 終章をタートル振り返り中心へ短縮
-3. 第1章・付録 C の前方参照（第3–4章）整理
-4. 未収録ファイルの退避／削除判断
-5. ディレクトリ名 `racket-turtle-fractals` の改名検討
+1. 第2章コード／本文を BSL + turtle に寄せる
+2. 第3章をループ版に書き直し（旧再帰原稿は drafts へ）
+3. 終章を薄く刈る
+4. 序章・付録 B/E の言語表を BSL→ISL+ に更新
+5. 未収録（フラクタル・Plot）の退避判断
 
-## 言語方針
+## 言語方針（今版）
 
-**A**: 序盤 BSL / 本編 `#lang racket` + `teachpacks/racket-turtle`（付録 E）  
-今版に Plot（付録 F）は含めない。
-
-## 参照
-
-- 縮小メモ: `notes/racket-turtle-fractals/scope-reduction-turtle-only-2026-09-10.md`
-- https://github.com/bluehive/draft-publish-books-2026/issues/15
+| 段階 | 言語 | 用途 |
+|------|------|------|
+| 第1章 | `htdp/bsl` | 式・関数・テスト |
+| 第2章 | `htdp/bsl` + turtle | 基本図形 |
+| 第3章 | `htdp/isl+` + turtle | 繰り返しで複雑な図形 |
