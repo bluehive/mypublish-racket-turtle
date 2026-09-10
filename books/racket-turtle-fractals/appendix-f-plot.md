@@ -1,7 +1,9 @@
 ---
-title: "付録 F　Racket Plot の基礎と Headless 画像生成"
+title: "付録 F　Racket Plot の基礎と画像ファイル出力"
 ---
 
+> **※これは発展付録です。** データやグラフに興味がある人向けで、本編（第1〜4章）より用語が硬めです。まずは飛ばして、必要になったら戻ってきてください。  
+>
 > **この付録のゴール**  
 > Racket 公式 `plot` ライブラリの背景、R 言語に勝るとも劣らない柔軟な設計思想、および GUI なしの環境（CI・書籍ビルド等）における Headless 画像出力 (`plot/bitmap`, `plot-file`) を習得する。  
 > **付属コード**: `code/appendix-f-headless-plot.rkt`

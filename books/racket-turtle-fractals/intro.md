@@ -95,7 +95,7 @@ DrRacket には初学者が安全に学べる「言語レベル」が用意さ�
 |---|---|---|
 | **序盤（序章〜第1章）** | `#lang htdp/bsl` (Beginning Student) | 式の計算・関数の定義・自動テスト・リストの基礎 |
 | **本編（第2章〜第4章）** | `#lang racket` + `teachpacks/racket-turtle` | カメへの命令リストを作ってフラクタルを描く |
-| **発展（終章・付録 F）** | `#lang racket` + `plot` | データや数式の宣言的プロット・Headless 画像出力 |
+| **発展（終章・付録 F）** | `#lang racket` + `plot` | 数式やデータをグラフにする／画面を出さずに画像ファイルへ保存 |
 
 ※ `htdp/bsl` の **HtDP** は教科書 *How to Design Programs*、**BSL** は *Beginning Student Language*（初心者言語）の略です。
 
