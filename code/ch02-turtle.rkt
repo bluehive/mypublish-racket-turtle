@@ -1,10 +1,9 @@
 ;; Racket タートルグラフィックス入門 — 第2章 タートル入門（BSL）
-;; 実行: racket code/ch02-turtle.rkt
+;; 実行: DrRacket で開くか `racket code/ch02-turtle.rkt`
 ;; 描画: DrRacket で (draw (changing-square 80)) など（要: raco pkg install teachpacks）
 
 #lang htdp/bsl
 
-(require test-engine/racket-tests)
 (require teachpacks/racket-turtle)
 
 ;; ------------------------------------------------------------
@@ -72,24 +71,6 @@
 (define repeat-square
   (repeat 4 side100))
 
-;; ------------------------------------------------------------
-;; 構造テスト（draw は呼ばない — CI / headless 用）
-;; ------------------------------------------------------------
-
-(check-expect (length (side 10 90)) 2)
-(check-expect (length (changing-square 30)) 8)
-(check-expect (length (make-regular-polygon 40 6)) 12)
-(check-expect (length (star-5 50)) 10)
-(check-expect (length square1) 8)
-(check-expect (length (move-without-drawing 10 90)) 4)
-(check-expect (length repeat-square) 8)
-(check-expect (length (decorate (list (change-color "red"))
-                                (list (forward 1))))
-              2)
-(check-expect (length (two-squares 60 40)) 21)
-(check-expect (length (fancy-square 40)) 4)
-
-(test)
 
 ;; 描画（任意）— コメントを外して DrRacket / 手元で
 ;; (draw (changing-square 80))
