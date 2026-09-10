@@ -95,7 +95,7 @@ Windows 以外（macOS / Linux）でも、同じダウンロードページか�
 
 #### B.7 teachpacks（racket-turtle）の導入
 
-第2章以降の本線描画は `teachpacks/racket-turtle` を使います（言語方針 A: 本編は `#lang racket`）。
+第2章の描画は `teachpacks/racket-turtle` を使います（言語方針 A: 第2章は `#lang htdp/bsl` + turtle）。
 
 ```text
 raco pkg install teachpacks
@@ -104,7 +104,7 @@ raco pkg install teachpacks
 確認用の最小例（第2章で詳述）:
 
 ```racket
-#lang racket
+#lang htdp/bsl
 (require teachpacks/racket-turtle)
 
 (define square1

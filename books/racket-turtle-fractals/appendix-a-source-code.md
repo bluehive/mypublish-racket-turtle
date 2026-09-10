@@ -8,7 +8,7 @@ title: "付録A　完全ソース一覧"
 | 章 | ファイル | 言語 | 状態 |
 |----|----------|------|------|
 | 第1章 | [`code/ch01-basics.rkt`](../../code/ch01-basics.rkt) | `#lang htdp/bsl` | 初版・テスト済 |
-| 第2章 | [`code/ch02-turtle.rkt`](../../code/ch02-turtle.rkt) | `#lang racket` + racket-turtle | ドラフト・構造テスト |
+| 第2章 | [`code/ch02-turtle.rkt`](../../code/ch02-turtle.rkt) | `#lang htdp/bsl` + racket-turtle | 構造テスト済 |
 | 第3章（今版外） | [`code/ch03-recursion.rkt`](../../code/ch03-recursion.rkt) | 同上 | ドラフト・テスト済 |
 | 第4章（今版外） | [`code/ch04-fractals.rkt`](../../code/ch04-fractals.rkt) | 同上 | ドラフト・テスト済 |
 | 第4章コラム（今版外） | [`code/ch04-recursion-plot.rkt`](../../code/ch04-recursion-plot.rkt) | `#lang racket` + plot | テスト済 |

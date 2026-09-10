@@ -49,7 +49,7 @@
 ### 第2章　タートル基礎（BSL + `racket-turtle`）
 
 - 原稿: [ch02-turtle.md](books/racket-turtle-fractals/ch02-turtle.md)
-- コード: [ch02-turtle.rkt](code/ch02-turtle.rkt) → **後続 PR で `#lang htdp/bsl` 化**
+- コード: [ch02-turtle.rkt](code/ch02-turtle.rkt)（`#lang htdp/bsl` + turtle）
 - 2.1 基本コマンドと命令リスト
 - 2.2 正方形・多角形
 - 2.3 色・ペン・スタンプ
