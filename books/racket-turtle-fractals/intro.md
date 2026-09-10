@@ -3,9 +3,9 @@ title: "序章　なぜ Racket で描くか——Scratch から広がるプロ�
 ---
 
 > **この章のゴール**  
-> 「線を一本ずつ描く」作業が、プログラムで一気に楽になる感覚をつかむ。Scratch などのビジュアル言語から Racket のテキストプログラミングへステップアップし、DrRacket で式を評価できる状態になる。続く第1–3章（BSL とタートル、ISL+ の繰り返し）への準備ができる。  
+> 「線を一本ずつ描く」作業が、プログラムで一気に楽になる感覚をつかむ。Scratch などのビジュアル言語から Racket のテキストプログラミングへステップアップし、DrRacket で式を評価できる状態になる。続く第1–3章（BSL とタートル、ISL の繰り返し）への準備ができる。  
 > **想定読者**: プログラミングを楽しみたい人（高校生〜大人。Scratch の経験が少しある方〜初学者）  
-> **言語方針 A**: 第1–2章 Beginning Student（`#lang htdp/bsl`、第2章は turtle）／第3章 Intermediate Student with lambda（`#lang htdp/isl+` + turtle、ループ）
+> **言語方針 A**: 第1–2章 Beginning Student（`#lang htdp/bsl`、第2章は turtle）／第3章 Intermediate Student（`#lang htdp/isl` + turtle、ループ）
 
 ---
 
@@ -50,7 +50,7 @@ Scratch で `[○ 歩動かす]` や `[○ 度回す]`、`[○ 回繰り返す]`
 
 1. **第1章**: 式・関数・リストのさわり（BSL）  
 2. **第2章**: カメで正方形や多角形を描く（BSL + turtle）  
-3. **第3章**: 繰り返し（ループ）で、もっと複雑な図形へ（ISL+ + turtle）  
+3. **第3章**: 繰り返し（ループ）で、もっと複雑な図形へ（ISL + turtle）  
 
 「線を一本ずつ」から「ルールを書いて一気に描く」へ。その切り替わりを、一緒に楽しんでいきましょう。
 
@@ -97,14 +97,14 @@ Scratch などのブロック言語から、Python や C言語、Java などの�
 3. **おすすめ設定**:
    - `Edit → Preferences`（Mac は `DrRacket → Preferences`）の `Editing` → `General Editing` で **Show line numbers（行番号を表示）** にチェックを入れます。
 
-##### 🎓 学びのレベル分け（BSL と ISL+）
+##### 🎓 学びのレベル分け（BSL と ISL）
 DrRacket には初学者が安全に学べる「言語レベル」が用意されています。本書では以下のアプローチ（**言語方針 A**）をとります。
 
 | 段階 | 使用する言語設定 | 何を学ぶか？ |
 |---|---|---|
 | **第1章** | `#lang htdp/bsl` (Beginning Student) | 式・関数・自動テスト・リストの基礎 |
 | **第2章** | `#lang htdp/bsl` + `teachpacks/racket-turtle` | カメの基本図形 |
-| **第3章** | `#lang htdp/isl+` (Intermediate Student with lambda) + turtle | `repeat` / `build-list` / `map` で複雑な図形（再帰は使わない） |
+| **第3章** | `#lang htdp/isl` (Intermediate Student) + turtle | `repeat` / `build-list` / `map` で複雑な図形（再帰は使わない） |
 
 ※ `htdp/bsl` の **HtDP** は教科書 *How to Design Programs*、**BSL** は *Beginning Student Language*（初心者言語）の略です。
 

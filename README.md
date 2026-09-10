@@ -1,6 +1,6 @@
 # mypublish-racket-turtle
 
-**『Racket タートルグラフィックス入門』**（副題: 式・関数・カメで図形を描く）の執筆リポジトリ。今版は **BSL タートル → ISL+ ループ図形** まで。明示的再帰・フラクタル・Processing は対象外。
+**『Racket タートルグラフィックス入門』**（副題: 式・関数・カメで図形を描く）の執筆リポジトリ。今版は **BSL タートル → ISL ループ図形** まで。明示的再帰・フラクタル・Processing は対象外。
 
 - **コード・執筆**: [Grok 4.5](https://x.ai) 協業
 - **公開**: [Zenn](https://zenn.dev) 本 → 最終確認後に EPUB / Kindle
@@ -24,7 +24,7 @@
 **目次の正本は本 README と `books/racket-turtle-fractals/`。**  
 章本文の正本は `books/racket-turtle-fractals/`。
 
-> **今版の範囲**: 序章 → 第1章（BSL）→ 第2章（BSL + turtle）→ 第3章（ISL+・ループで複雑図形）→ 薄い終章 ＋ 付録 A–E。  
+> **今版の範囲**: 序章 → 第1章（BSL）→ 第2章（BSL + turtle）→ 第3章（ISL・ループで複雑図形）→ 薄い終章 ＋ 付録 A–E。  
 > **今版外**: 明示的再帰・フラクタル本線・Processing。  
 > 詳細: [縮小メモ](notes/racket-turtle-fractals/scope-reduction-turtle-only-2026-09-10.md)
 
@@ -33,7 +33,7 @@
 - 原稿: [intro.md](books/racket-turtle-fractals/intro.md)
 - 0.1 線を手で描くところから、プログラムで自動化する楽しさへ
 - 0.2 なぜ Racket か
-- 0.3 DrRacket と BSL／ISL+ の見取り図
+- 0.3 DrRacket と BSL／ISL の見取り図
 - 0.4 本書の進め方
 
 ### 第1章　Racket の基礎——式と関数（BSL）
@@ -54,14 +54,17 @@
 - 2.3 色・ペン・スタイルの装飾
 - 2.4 関数で図形を再利用
 
-### 第3章　ループで複雑な図形（ISL+ + turtle）
+### 第3章　ループで複雑な図形（ISL + turtle）
 
-- 原稿: 現状ファイル名は [ch03-recursion.md](books/racket-turtle-fractals/ch03-recursion.md)（**内容はループ版へ全面書換予定**。旧・再帰稿は drafts へ）
-- コード: 新 `code/ch03-*.rkt`（`#lang htdp/isl+`）を後続で追加
-- 3.1 タートルの `repeat`
-- 3.2 `build-list` / `map` で命令列をまとめて作る
-- 3.3 リストの平坦化（二重リストに注意）と幾何模様
-- ※ ISL+ に `for` は無い。本章の「ループ」＝ `repeat` と高階関数による反復生成
+- 原稿: [ch03-loops.md](books/racket-turtle-fractals/ch03-loops.md)
+- コード: [ch03-loops.rkt](code/ch03-loops.rkt)（`#lang htdp/isl` + turtle）
+- 3.0 なぜループか
+- 3.1 ISL への切り替え
+- 3.2 `repeat` のおさらい
+- 3.3 `build-list` と平坦化
+- 3.4 螺旋（ループ版）
+- 3.5 `map` で色・部品
+- ※ ISL に `for` は無い。本章の「ループ」＝ `repeat` と高階関数による反復生成。旧・再帰稿は `drafts/` へ退避
 
 ### 終章　振り返り（薄い）
 
@@ -72,7 +75,7 @@
 
 | 内容 | 原稿 | 備考 |
 |------|------|------|
-| 旧・再帰第3章 | （書換前の ch03） | drafts 予定 |
+| 旧・再帰第3章 | [`drafts/racket-turtle-fractals/`](drafts/racket-turtle-fractals/) | 退避済み |
 | 第4章 フラクタル | [ch04-fractals.md](books/racket-turtle-fractals/ch04-fractals.md) | 今版外 |
 
 ### 学習の目安
@@ -81,7 +84,7 @@
 |------|-----|------|
 | 準備 | 序章・第1章 | BSL |
 | 本編① | 第2章 | BSL + turtle |
-| 本編② | 第3章 | ISL+ + turtle（ループ） |
+| 本編② | 第3章 | ISL + turtle（ループ） |
 | まとめ | 終章 | — |
 
 ## 付録
@@ -92,7 +95,7 @@
 | B | 環境構築 | [appendix-b-environment.md](books/racket-turtle-fractals/appendix-b-environment.md) |
 | C | 復習と例題集 | [appendix-c-exercises.md](books/racket-turtle-fractals/appendix-c-exercises.md) |
 | D | 参考文献 | [appendix-d-references.md](books/racket-turtle-fractals/appendix-d-references.md) |
-| E | BSL / ISL+ / turtle の使い分け | [appendix-e-lang-policy.md](books/racket-turtle-fractals/appendix-e-lang-policy.md) |
+| E | BSL / ISL / turtle の使い分け | [appendix-e-lang-policy.md](books/racket-turtle-fractals/appendix-e-lang-policy.md) |
 
 ## 言語方針 A（今版）
 
@@ -100,7 +103,7 @@
 |------|------|------|
 | 第1章 | `#lang htdp/bsl` | 式・関数・テスト |
 | 第2章 | `#lang htdp/bsl` + `teachpacks/racket-turtle` | 基本タートル図形 |
-| 第3章 | `#lang htdp/isl+` + `teachpacks/racket-turtle` | ループ（`repeat` / `build-list` / `map`）で複雑図形 |
+| 第3章 | `#lang htdp/isl` + `teachpacks/racket-turtle` | ループ（`repeat` / `build-list` / `map`）で複雑図形 |
 | 詳細 | 付録 E | |
 
 今版に Processing／明示的再帰／フラクタル本線は含めない。
