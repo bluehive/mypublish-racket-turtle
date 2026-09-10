@@ -32,7 +32,7 @@
 ### 序章　なぜ Racket で描くか
 
 - 原稿: [intro.md](books/racket-turtle-fractals/intro.md)
-- 0.1 プログラムで図形を描く楽しさ
+- 0.1 線を手で描くところから、プログラムで自動化する楽しさへ
 - 0.2 なぜ Racket か
 - 0.3 DrRacket と BSL／ISL+ の見取り図
 - 0.4 本書の進め方
