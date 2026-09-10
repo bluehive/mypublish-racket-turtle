@@ -86,7 +86,7 @@ Scratch などのブロック言語から、Python や C言語、Java などの�
 1. [Racket 公式サイト](https://download.racket-lang.org/) から環境に合ったインストーラをダウンロードしてインストールします。
 2. アプリケーションから **DrRacket** を起動します。
 3. **おすすめ設定**:
-   - `Edit → Preferences`（Mac は `DrRacket → Preferences`）の `Display` タブで **Show line numbers（行番号を表示）** にチェックを入れます。
+   - `Edit → Preferences`（Mac は `DrRacket → Preferences`）の `Editing` → `General Editing` で **Show line numbers（行番号を表示）** にチェックを入れます。
 
 ##### 🎓 学びのレベル分け（BSL と `#lang racket`）
 DrRacket には初学者が安全に学べる「言語レベル」が用意されています。本書では以下のアプローチ（**言語方針 A**）をとります。
@@ -101,7 +101,7 @@ DrRacket には初学者が安全に学べる「言語レベル」が用意さ�
 
 ##### 💻 相互作用ウィンドウ（REPL）で遊んでみよう
 DrRacket の画面は上下（または左右）に2つに分かれています。
-- **定義ウィンドウ（上・左）**: プログラム全体をファイルとして書き保存する場所
+- **定義ウィンドウ（上・左）**: プログラム全体をファイルとして書いて保存する場所
 - **相互作用ウィンドウ（下・右 / REPL）**: 1行コードを入れるとすぐその場で計算結果を返してくれる実験場
 
 相互作用ウィンドウ（REPL: Read-Eval-Print Loop）に、次のように打ち込んで Enter キーを押してみましょう。

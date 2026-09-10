@@ -93,7 +93,7 @@ racket code/ch01-basics.rkt
 
 Windows 以外（macOS / Linux）でも、同じダウンロードページから OS 用を入れ、言語レベルを Beginning Student にすれば同様です。
 
-#### B.6 teachpacks（racket-turtle）の導入
+#### B.7 teachpacks（racket-turtle）の導入
 
 第2章以降の本線描画は `teachpacks/racket-turtle` を使います（言語方針 A: 本編は `#lang racket`）。
 
@@ -110,16 +110,16 @@ raco pkg install teachpacks
 (define square1
   (list
    (forward 100)
-   (right 90)
+   (turn-left 90)
    (forward 100)
-   (right 90)
+   (turn-left 90)
    (forward 100)
-   (right 90)
-   (forward 100)))
+   (turn-left 90)
+   (forward 100)
+   (turn-left 90)))
 
 (draw square1)
 ```
 
 公式: [Racket Turtle](https://docs.racket-lang.org/racket_turtle/index.html)
 
-> 三角ロジックで整理予定

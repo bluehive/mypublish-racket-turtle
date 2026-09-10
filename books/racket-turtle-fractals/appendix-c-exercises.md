@@ -7,7 +7,7 @@ title: "付録C　復習と例題集"
 
 #### C.1 第1章
 
-- 斜辺の式、`check-expect` を2つ以上書く  
+- 第1章の関数（例: 面積や簡単な述語）に `check-expect` を2つ以上書く  
 - リスト `SQUARE-STEPS` の長さを手で数え、`my-length` と比較する  
 
 #### C.2 第2章

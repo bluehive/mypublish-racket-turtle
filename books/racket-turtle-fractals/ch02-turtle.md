@@ -124,10 +124,10 @@ $$\text{外角} = \frac{360^\circ}{n}$$
 
 ```racket
 (define fancy-polygon
-  (list (change-bg-color "black")      ; 背景を黒にする
-        (change-color "gold")          ; 線を金色にする
-        (change-pen-size 4)            ; ペンを太さ 4 にする
-        (regular-polygon 70 8)))       ; 正八角形を描く
+  (append (list (change-bg-color "black")   ; 背景を黒にする
+                (change-color "gold")       ; 線を金色にする
+                (change-pen-size 4))        ; ペンを太さ 4 にする
+          (regular-polygon 70 8)))          ; 正八角形を描く
 ```
 
 （※付属コード `code/ch02-turtle.rkt` には、同じ装飾を「正方形」に施した `fancy-square` が載っています。形とペン太さが違いますが、**「装飾命令リスト + 図形命令リスト」という構造は同じ**です。ここでは説明のため正八角形で示しました。）
