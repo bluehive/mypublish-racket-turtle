@@ -3,9 +3,9 @@ title: "序章　なぜ Racket で描くか——Scratch から広がる数学�
 ---
 
 > **この章のゴール**  
-> 自己相似形（フラクタル）とは何かをつかみ、Scratch などのビジュアル言語から Racket のテキストプログラミングへスムーズにステップアップする。DrRacket を使って式を評価できる状態になる。  
+> プログラムで図形を描く楽しさをつかみ、Scratch などのビジュアル言語から Racket のテキストプログラミングへステップアップする。DrRacket で式を評価でき、続く第1–2章（BSL とタートル）への準備ができる状態になる。今版はタートルまで（フラクタル本線は次巻候補）。  
 > **想定読者**: プログラミングを楽しみたい人（高校生〜大人。Scratch の経験が少しある方〜初学者）  
-> **言語方針 A**: 序盤 Beginning Student（`#lang htdp/bsl`）／本編描画は `#lang racket` + `teachpacks/racket-turtle`
+> **言語方針 A**: 第1–2章 Beginning Student（`#lang htdp/bsl`、第2章は turtle）／第3章 Intermediate Student with lambda（`#lang htdp/isl+` + turtle、ループ）
 
 ---
 
@@ -88,14 +88,14 @@ Scratch などのブロック言語から、Python や C言語、Java などの�
 3. **おすすめ設定**:
    - `Edit → Preferences`（Mac は `DrRacket → Preferences`）の `Editing` → `General Editing` で **Show line numbers（行番号を表示）** にチェックを入れます。
 
-##### 🎓 学びのレベル分け（BSL と `#lang racket`）
+##### 🎓 学びのレベル分け（BSL と ISL+）
 DrRacket には初学者が安全に学べる「言語レベル」が用意されています。本書では以下のアプローチ（**言語方針 A**）をとります。
 
 | 段階 | 使用する言語設定 | 何を学ぶか？ |
 |---|---|---|
-| **序盤（序章〜第1章）** | `#lang htdp/bsl` (Beginning Student) | 式の計算・関数の定義・自動テスト・リストの基礎 |
-| **本編（第2章〜第4章）** | `#lang racket` + `teachpacks/racket-turtle` | カメへの命令リストを作ってフラクタルを描く |
-| **発展（終章・付録 F）** | `#lang racket` + `plot` | 数式やデータをグラフにする／画面を出さずに画像ファイルへ保存 |
+| **第1章** | `#lang htdp/bsl` (Beginning Student) | 式・関数・自動テスト・リストの基礎 |
+| **第2章** | `#lang htdp/bsl` + `teachpacks/racket-turtle` | カメの基本図形 |
+| **第3章** | `#lang htdp/isl+` (Intermediate Student with lambda) + turtle | `repeat` / `build-list` / `map` で複雑な図形（再帰は使わない） |
 
 ※ `htdp/bsl` の **HtDP** は教科書 *How to Design Programs*、**BSL** は *Beginning Student Language*（初心者言語）の略です。
 
@@ -132,6 +132,6 @@ DrRacket の画面は上下（または左右）に2つに分かれています�
 | **1〜2日目** | カメ（タートル）を動かして基本図形を描く | **第2章** |
 | **3日目** | 「再帰」を使って繰り返すパターンを覚える | **第3章** |
 | **4〜6日目** | ツリー・コッホ・シェルピンスキー・ドラゴンを描く | **第4章** |
-| **7日目** | 現実世界のフラクタル・Racket Plot や次のステップへ | **終章・付録** |
+| **まとめ** | 振り返り（短く） | **終章** |
 
 さあ、準備は整いました。次の第1章から、いよいよ Racket の基本ルールを学んでいきましょう！
